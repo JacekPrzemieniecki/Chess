@@ -8,8 +8,6 @@
 class Game
 {
 public:
-	Game();
-	~Game();
 	void TryMakeMove(Move& move);
 	PieceType GetPiece(int position);
 	std::set<int>& GetWhitePieces();
@@ -17,7 +15,7 @@ public:
 	Move& GetLastMove();
 
 	bool gameOver = false;
-	Board* board;
+	Board board;
 private:
 	AIPlayer aiPlayer;
 };
