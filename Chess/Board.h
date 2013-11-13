@@ -1,7 +1,7 @@
 #pragma once
 #include "Move.h"
 #include "Piece.h"
-#include <vector>
+#include <set>
 
 class Board
 {
@@ -13,12 +13,14 @@ public:
 	PieceType operator[](int index);
 	Move lastMove;
 	PieceType board[128];
-	std::vector<int> whitePieces;
-	std::vector<int> blackPieces;
+	std::set<int> whitePieces;
+	std::set<int> blackPieces;
 	int enPassant = -1;
 	bool whiteToMove;
 
 	void MakeMove(Move);
+
+	void Print();
 
 	// Castle rights:
 	bool bkcastle = true;

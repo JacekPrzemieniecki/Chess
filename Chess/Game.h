@@ -3,7 +3,7 @@
 #include "Board.h"
 #include "Move.h"
 #include "AIPlayer.h"
-#include <vector>
+#include <set>
 
 class Game
 {
@@ -12,8 +12,8 @@ public:
 	~Game();
 	void TryMakeMove(Move& move);
 	PieceType GetPiece(int position);
-	std::vector<int>& GetWhitePieces();
-	std::vector<int>& GetBlackPieces();
+	std::set<int>& GetWhitePieces();
+	std::set<int>& GetBlackPieces();
 	Move& GetLastMove();
 
 	bool gameOver = false;

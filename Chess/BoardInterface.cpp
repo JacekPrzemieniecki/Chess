@@ -177,14 +177,16 @@ void BoardInterface::Draw()
 		DrawMoveSuggestion();
 	}
 
-	for (std::vector<int>::iterator it = game.GetWhitePieces().begin(); it != game.GetWhitePieces().end(); ++it)
+	set<int> whitePieces = game.GetWhitePieces();
+	for (int pos: whitePieces)
 	{
-		DrawPiece(game.GetPiece(*it), *it);
+		DrawPiece(game.GetPiece(pos), pos);
 	}
 
-	for (std::vector<int>::iterator it = game.GetBlackPieces().begin(); it != game.GetBlackPieces().end(); ++it)
+	set<int> blackPieces = game.GetBlackPieces();
+	for (int pos : blackPieces)
 	{
-		DrawPiece(game.GetPiece(*it), *it);
+		DrawPiece(game.GetPiece(pos), pos);
 	}
 
 	if (pendingPromote)

@@ -9,7 +9,7 @@ void KnightOrKingMove(int position, Board& board, vector<Move*>& result, vector<
 {
 	for (vector<int>::iterator it = tab.begin(); it != tab.end(); it++)
 	{
-		int target = position + *it;
+		char target = position + *it;
 		if (target & 0x88) continue; // target position out of board
 		if (board[target] * board[position] > 0) continue; // attacking own piece is invalid
 		result.push_back(new Move(position, target));
@@ -120,23 +120,30 @@ void Generate(int position, Board& board, vector<Move*>& result)
 
 void GenerateAll(Board& board, vector<Move*>& result)
 {
-	vector<int> pieces = board.whiteToMove ? board.whitePieces : board.blackPieces;
-	for (vector<int>::iterator it = pieces.begin(); it != pieces.end(); it++)
+	set<int> pieces = board.whiteToMove ? board.whitePieces : board.blackPieces;
+	for (int i : pieces)
 	{
-		Generate(*it, board, result);
+		Generate(i, board, result);
 	}
 }
 
 bool IsMovePossible(Board& board)
 {
+	cout << "Checking for possible moves" << endl;
 	vector<Move*> possibleMoves;
 	bool possible = false;
 	GenerateAll(board, possibleMoves);
+	cout << "Found " << possibleMoves.size() << " moves:" << endl;
 	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
 	{
+		cout << (*it)->from << "->" << (*it)->to << " ";
 		if (IsMoveLegal(board, **it, board.whiteToMove))
+		{
 			possible = true;
-		break;
+			cout << "legal" << endl;
+			break;
+		}
+		cout << "ill; ";
 	}
 	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
 	{

@@ -2,6 +2,7 @@
 #include "Piece.h"
 #include "MoveValidator.h"
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -97,14 +98,17 @@ Board::~Board(void)
 
 int Board::FindKing(bool white)
 {
-	vector<int>& tab = white ? whitePieces : blackPieces;
-	for (vector<int>::iterator it = tab.begin(); it != tab.end(); it++)
+	set<int>& tab = white ? whitePieces : blackPieces;
+	PieceType lookingFor = white ? W_KING : B_KING;
+	for (set<int>::iterator it = tab.begin(); it != tab.end(); it++)
 	{
-		if (white && board[*it] == W_KING)
+		if ( board[*it] == lookingFor)
+		{
+			cout << "Found king at " << *it << endl;
 			return *it;
-		if (!white && board[*it] == B_KING)
-			return *it;
+		}
 	}
+	throw exception();
 }
 
 void Board::Place(PieceType type, int x, int y)
@@ -115,20 +119,28 @@ void Board::Place(PieceType type, int x, int y)
 void Board::Place(PieceType type, int position)
 {
 	//cout << "Placing piece: " << type << " On position: " << position << endl;
+	if (board[position] > 0)
+	{
+		whitePieces.erase(position);
+	} 
+	else if (board[position] < 0)
+	{
+		blackPieces.erase(position);
+	}
+
 	board[position] = type;
 	if (type > 0)
 	{
-		whitePieces.push_back(position);
+		whitePieces.insert(position);
 	}
 	else if (type < 0)
 	{
-		blackPieces.push_back(position);
+		blackPieces.insert(position);
 	}
 }
 
 void Board::MakeMove(Move m)
 {
-
 	if (m.from == 115)
 	{
 		wkcastle = wqcastle = false;
@@ -164,19 +176,21 @@ void Board::MakeMove(Move m)
 		Place(board[m.from], m.to);
 	}
 
-	vector<int>& pieceVector = whiteToMove ? whitePieces : blackPieces;
-	for (auto it = pieceVector.begin(); it != pieceVector.end(); it++)
-	{
-		if (*it == m.from)
-		{
-			pieceVector.erase(it);
-			break;
-		}
-
-	}
 	Place(EMPTY, m.from);
 
 	lastMove = m;
 	enPassant = -1;
 	whiteToMove = !whiteToMove;
+}
+
+void Board::Print()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			cout << setw(2) << board[j + 16 * i] << " ";
+		}
+		cout << endl;
+	}
 }
