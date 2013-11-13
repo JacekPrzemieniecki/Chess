@@ -11,7 +11,6 @@ public:
 	~Board(void);
 	int FindKing(bool white);
 	PieceType operator[](int index);
-	Board* previous;
 	Move lastMove;
 	PieceType board[128];
 	std::vector<int> whitePieces;

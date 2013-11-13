@@ -14,8 +14,8 @@ whiteToMove(true)
 	Place(W_KNIGHT, 6, 7);
 	Place(W_BISHOP, 2, 7);
 	Place(W_BISHOP, 5, 7);
-	Place(W_QUEEN, 4, 7);
-	Place(W_KING, 3, 7);
+	Place(W_QUEEN, 3, 7);
+	Place(W_KING, 4, 7);
 
 	Place(B_ROCK, 0, 0);
 	Place(B_ROCK, 7, 0);
@@ -23,8 +23,8 @@ whiteToMove(true)
 	Place(B_KNIGHT, 6, 0);
 	Place(B_BISHOP, 2, 0);
 	Place(B_BISHOP, 5, 0);
-	Place(B_QUEEN, 3, 0);
-	Place(B_KING, 4, 0);
+	Place(B_QUEEN, 4, 0);
+	Place(B_KING, 3, 0);
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -35,7 +35,6 @@ whiteToMove(true)
 
 
 Board::Board(Board* b, Move& m):
-previous(b),
 lastMove(m),
 whiteToMove(!b->whiteToMove),
 wkcastle(b->wkcastle),
