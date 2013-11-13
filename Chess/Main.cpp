@@ -3,13 +3,18 @@
 #include "Test.h"
 #include <iostream>
 
-int main()
+void test()
 {
 	Test t;
 	clock_t begin = clock();
 	t.GeneratorTest();
 	clock_t end = clock();
 	std::cout << "Time: " << double(end - begin) / CLOCKS_PER_SEC << std::endl;
+}
+
+int main()
+{
+	//test();
 	sf::RenderWindow window(sf::VideoMode(700, 700), "Chess", sf::Style::Close);
 	window.setFramerateLimit(30);
 	BoardInterface boardInterface(window);
