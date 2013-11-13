@@ -125,3 +125,58 @@ void Board::Place(PieceType type, int position)
 		blackPieces.push_back(position);
 	}
 }
+
+void Board::MakeMove(Move m)
+{
+
+	if (m.from == 115)
+	{
+		wkcastle = wqcastle = false;
+		//cout << "White castle no longer possible" << endl;
+	}
+	if (m.from == 119 || m.to == 119)
+	{
+		wqcastle = false;
+		//cout << "White queen-side castle no longer possible" << endl;
+	}
+	if (m.from == 112 || m.to == 112)
+	{
+		wkcastle = false;
+		//cout << "White king-side castle no longer possible" << endl;
+	}
+	if (m.isCastle)
+	{
+		Place(board[m.castleFrom], m.castleTo);
+		//cout << "Castling moves piece: " << (*b)[m.castleFrom] << "to: " << m.castleTo << endl;
+	}
+
+	if (m.isPawnDoublePush)
+	{
+		enPassant = m.enPassantPosition;
+	}
+
+	if (m.promoteTo != EMPTY)
+	{
+		Place(m.promoteTo, m.to);
+	}
+	else
+	{
+		Place(board[m.from], m.to);
+	}
+
+	vector<int>& pieceVector = whiteToMove ? whitePieces : blackPieces;
+	for (auto it = pieceVector.begin(); it != pieceVector.end(); it++)
+	{
+		if (*it == m.from)
+		{
+			pieceVector.erase(it);
+			break;
+		}
+
+	}
+	Place(EMPTY, m.from);
+
+	lastMove = m;
+	enPassant = -1;
+	whiteToMove = !whiteToMove;
+}

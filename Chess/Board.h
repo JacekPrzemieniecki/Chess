@@ -18,6 +18,8 @@ public:
 	int enPassant = -1;
 	bool whiteToMove;
 
+	void MakeMove(Move);
+
 	// Castle rights:
 	bool bkcastle = true;
 	bool bqcastle = true;
