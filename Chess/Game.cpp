@@ -19,12 +19,12 @@ PieceType Game::GetPiece(int position)
 	return (*board)[position];
 }
 
-vector<int>& Game::GetWhitePieces()
+set<int>& Game::GetWhitePieces()
 {
 	return board->whitePieces;
 }
 
-vector<int>& Game::GetBlackPieces()
+set<int>& Game::GetBlackPieces()
 {
 	return board->blackPieces;
 }
@@ -36,6 +36,7 @@ Move& Game::GetLastMove()
 
 void Game::TryMakeMove(Move& move)
 {
+	board->Print();
 	cout << "Asked to move from: " << move.from << " to: " << move.to << endl;
 	if (!ValidateMove(*board, move))
 	{
@@ -48,17 +49,21 @@ void Game::TryMakeMove(Move& move)
 		return;
 	}
 	cout << "Move valid" << endl;
-	board = new Board(board, move);
+	board->MakeMove(move);
+	board->Print();
 	if (!IsMovePossible(*board))
 	{
+		cout << "Game Over" << endl;
 		gameOver = true;
 		return;
 	}
 	Move aiMove = aiPlayer.MakeMove(*board);
 	cout << "Ai moving from: " << aiMove.from << " to: " << aiMove.to << endl;
-	board = new Board(board, aiMove);
+	board->MakeMove(aiMove);
+	board->Print();
 	if (!IsMovePossible(*board))
 	{
+		cout << "Game Over" << endl;
 		gameOver = true;
 		return;
 	}
