@@ -12,9 +12,9 @@ class BoardInterface
 {
 public:
 	BoardInterface(sf::RenderWindow&);
-	~BoardInterface(void);
 	void OnClick(int x, int y);
 	void Draw();
+	void Undo();
 private:
 	void BoardInterface::DrawPiece(PieceType type, int boardPosition);
 	void DrawLastMove(Move& move);

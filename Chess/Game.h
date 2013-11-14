@@ -9,6 +9,7 @@ class Game
 {
 public:
 	void TryMakeMove(Move& move);
+	void Undo();
 	PieceType GetPiece(int position);
 	std::set<int>& GetWhitePieces();
 	std::set<int>& GetBlackPieces();

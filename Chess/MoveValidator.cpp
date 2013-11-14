@@ -80,21 +80,27 @@ bool BishopMove(Board& board, int from, int to)
 
 bool ValidateCastle(Board& board, Move& move)
 {
-	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
 	for (int i = 0; i < 4; i++)
 	{
 		castleMoves cInfo = castleTables[i];
+		//cout << "move.from == cInfo.kingFrom: " << (move.from == cInfo.kingFrom) << " move.to == cInfo.kingTo: " << (move.to == cInfo.kingTo)
+		//	<< " board.castleRights[cInfo.type] > board.turn " << (board.castleRights[cInfo.type] > board.turn)
+		//	<< " cInfo.rockTo == rayCast(board, cInfo.kingFrom, cInfo.rockTo, cInfo.kingDirection)) " << 
+		//	(cInfo.rockTo == rayCast(board, cInfo.kingFrom, cInfo.rockTo, cInfo.kingDirection)) << endl;
 		if (move.from == cInfo.kingFrom &&						// King moves from initial position
 			move.to == cInfo.kingTo &&							// To a castle field
 			board.castleRights[cInfo.type] > board.turn &&  // Player didn't loose castle right
-			cInfo.rockTo == rayCast(board, cInfo.kingFrom, cInfo.rockTo, cInfo.kingDirection)) // No field on between king and rock is taken
+			cInfo.kingTo == rayCast(board, cInfo.kingFrom, cInfo.kingTo, cInfo.kingDirection)) // No field on between king and rock is taken
 		{
-			cout << "Castling!" << endl;
+			//cout << "Castling!" << endl;
 			move.castleInfo = &castleTables[i];
-			return !(
+			if (!(
 				IsAttacked(board, cInfo.kingFrom, cInfo.type > 0) ||
 				IsAttacked(board, cInfo.rockTo, cInfo.type > 0) ||
-				IsAttacked(board, cInfo.kingTo, cInfo.type > 0));
+				IsAttacked(board, cInfo.kingTo, cInfo.type > 0)))
+			{
+				return true;
+			}
 		}
 	}
 	return false;
@@ -176,13 +182,13 @@ bool ValidateMove(Board& board, Move& move)
 
 bool IsAttacked(Board& board, int position, bool byBlack)
 {
-	cout << "Checking if position: " << position << " is attacked " << (byBlack ? "by Black" : "by White") << endl;
+	//cout << "Checking if position: " << position << " is attacked " << (byBlack ? "by Black" : "by White") << endl;
 	int sign = byBlack ? -1 : 1;
 	for (vector<int>::iterator it = knightTab.begin(); it != knightTab.end(); it++)
 	{
 		if (board[position + *it] == W_KNIGHT * sign)
 		{
-			cout << "It is - by a king" << endl;
+			//cout << "It is - by a king" << endl;
 			return true;
 		}
 	}
@@ -192,7 +198,7 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 		if (board[position + *it] == W_KING * sign)
 		{
 
-			cout << "It is - by a knight" << endl;
+			//cout << "It is - by a knight" << endl;
 			return true;
 		}
 	}
@@ -203,7 +209,7 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 	{
 		if (board[*it] == W_BISHOP * sign || board[*it] == W_QUEEN * sign)
 		{
-			cout << "It is - by a bishop" << endl;
+			//cout << "It is - by a bishop" << endl;
 			return true;
 		}
 	}
@@ -213,7 +219,7 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 	{
 		if (board[*it] == W_ROCK * sign || board[*it] == W_QUEEN * sign)
 		{
-			cout << "It is - by a rock" << endl;
+			//cout << "It is - by a rock" << endl;
 			return true;
 		}
 	}
@@ -226,12 +232,12 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 
 bool IsMoveLegal(Board& board, Move& move, bool whiteMove)
 {
-	Board* newBoard = new Board(&board, move);
+	board.MakeMove(move);
 	bool legal = true;
-	if (IsAttacked(*newBoard, newBoard->FindKing(whiteMove), whiteMove))
+	if (IsAttacked(board, board.FindKing(whiteMove), whiteMove))
 	{
 		legal = false;
 	}
-	delete newBoard;
+	board.UndoMove();
 	return legal;
 }

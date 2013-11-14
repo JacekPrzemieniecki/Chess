@@ -34,8 +34,10 @@ window(_window)
 	LoadTextures();
 }
 
-BoardInterface::~BoardInterface()
+void BoardInterface::Undo()
 {
+	game.Undo();
+	game.Undo();
 }
 
 void BoardInterface::OnClick(int x, int y)

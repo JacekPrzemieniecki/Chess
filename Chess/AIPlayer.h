@@ -6,6 +6,6 @@ class AIPlayer
 public:
 	AIPlayer();
 	~AIPlayer();
-	Move MakeMove(Board& board);
+	Move MakeMove(Board board);
 };
 

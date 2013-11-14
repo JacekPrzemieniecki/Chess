@@ -10,11 +10,11 @@ class Board
 public:
 	// methods
 	Board(void);
-	Board(Board*, Move&);
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move GetLastMove();
 	void MakeMove(Move);
+	void UndoMove();
 	void Print();
 
 	// fields

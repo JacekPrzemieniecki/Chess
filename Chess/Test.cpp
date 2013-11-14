@@ -14,11 +14,11 @@ Test::~Test()
 }
 
 
-int countPossibilities(Board* b, int depth)
+int countPossibilities(Board& b, int depth)
 {
 	int poss = 0;
 	vector<Move*> possibleMoves;
-	GenerateAll(*b, possibleMoves);
+	GenerateAll(b, possibleMoves);
 	if (depth == 0)
 	{
 		int s = possibleMoves.size();
@@ -32,9 +32,9 @@ int countPossibilities(Board* b, int depth)
 	{
 		for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
 		{
-			Board* newBoard = new Board(b, **it);
-			poss += countPossibilities(newBoard, depth - 1);
-			delete newBoard;
+			b.MakeMove(**it);
+			poss += countPossibilities(b, depth - 1);
+			b.UndoMove();
 			delete *it;
 		}
 	}
@@ -43,10 +43,9 @@ int countPossibilities(Board* b, int depth)
 
 void Test::GeneratorTest()
 {
-	Board* b = new Board();
+	Board b;
 	for (int i = 0; i < 6; i++)
 	{
 		cout << "Depth: " << i << " Possibilities: " << countPossibilities(b, i) << endl;
 	}
-	delete b;
 }

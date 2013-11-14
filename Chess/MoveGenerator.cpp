@@ -114,6 +114,7 @@ void Generate(int position, Board& board, vector<Move*>& result)
 	case B_KING:
 	case W_KING:
 		KnightOrKingMove(position, board, result, kingTab);
+		//CastleMoves(position, board, result);
 		break;
 	case B_BISHOP:
 	case W_BISHOP:

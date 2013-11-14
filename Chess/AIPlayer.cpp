@@ -15,7 +15,7 @@ AIPlayer::~AIPlayer()
 {
 }
 
-Move AIPlayer::MakeMove(Board& board)
+Move AIPlayer::MakeMove(Board board)
 {
 	cout << "AI preparing to make move" << endl;
 	vector<Move*> possibleMoves;
@@ -24,14 +24,16 @@ Move AIPlayer::MakeMove(Board& board)
 	Move chosenMove = *(possibleMoves[rand() % possibleMoves.size()]);
 	cout << "Choosing move from: " << chosenMove.from << " to " << chosenMove.to << endl;
 	int i = 0;
-	Board* boardAfterMove = new Board(&board, chosenMove);
-	cout << "Checking if king at position " << boardAfterMove->FindKing(false) << " is in check after AI move" << endl;
-	while (IsAttacked(*boardAfterMove, boardAfterMove->FindKing(false), false))
+	board.MakeMove(chosenMove);
+	cout << "Checking if king at position " << board.FindKing(false) << " is in check after AI move" << endl;
+	while (IsAttacked(board, board.FindKing(false), false))
 	{
+		board.UndoMove();
 		cout << "King in check, generating another move" << endl;
 		chosenMove = *(possibleMoves[rand() % possibleMoves.size()]);
-		boardAfterMove = new Board(&board, chosenMove);
+		board.MakeMove(chosenMove);
 	}
+	board.UndoMove();
 	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
 	{
 		delete *it;

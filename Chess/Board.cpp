@@ -35,57 +35,6 @@ whiteToMove(true)
 	}
 }
 
-Board::Board(Board* b, Move& m) :
-whiteToMove(!b->whiteToMove),
-wkcastle(b->wkcastle),
-wqcastle(b->wqcastle),
-bkcastle(b->bkcastle),
-bqcastle(b->bqcastle)
-{
-	if (m.from == 115)
-	{
-		wkcastle = wqcastle = false;
-		//cout << "White castle no longer possible" << endl;
-	}
-	if (m.from == 119 || m.to == 119)
-	{
-		wqcastle = false;
-		//cout << "White queen-side castle no longer possible" << endl;
-	}
-	if (m.from == 112 || m.to == 112)
-	{
-		wkcastle = false;
-		//cout << "White king-side castle no longer possible" << endl;
-	}
-	if (m.castleInfo != NULL)
-	{
-		Place((*b)[m.castleInfo->rockFrom], m.castleInfo->rockTo);
-		//cout << "Castling moves piece: " << (*b)[m.castleFrom] << "to: " << m.castleTo << endl;
-	}
-
-	if (m.isPawnDoublePush)
-	{
-		enPassant = m.enPassantPosition;
-	}
-
-	if (m.promoteTo != EMPTY)
-	{
-		Place(m.promoteTo, m.to);
-	}
-	else
-	{
-		Place((*b)[m.from], m.to);
-	}
-	for (int i = 0; i < 127; i++)
-	{
-		if ((*b)[i] == EMPTY || i == m.to || i == m.from || (m.castleInfo == NULL) ? false : (m.castleInfo->rockFrom == i) || (m.castleInfo == NULL) ? false : (m.castleInfo->rockTo == i))
-		{
-			continue;
-		}
-		Place((*b)[i], i);
-	}
-}
-
 PieceType Board::operator[](int index)
 {
 	return board[index];
@@ -143,8 +92,6 @@ void Board::MakeMove(Move move)
 {
 	move.capturedPiece = board[move.to];
 
-	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
-
 	for (int i = 0; i < 4; i++)
 	{
 		castleMoves cInfo = castleTables[i];
@@ -185,6 +132,45 @@ void Board::MakeMove(Move move)
 	moveHistory.push_front(move);
 	whiteToMove = !whiteToMove;
 	turn++;
+}
+
+void Board::UndoMove()
+{
+	Move last_move = moveHistory.front();
+	//cout << "Undoing move from " << last_move.from << " to: " << last_move.to << endl;
+	whiteToMove = !whiteToMove;
+	turn--;
+
+	// If castle rights were lost this turn, restore them.
+	for (int i = 0; i < 4; i++)
+	{
+		castleMoves cInfo = castleTables[i];
+		if (castleRights[cInfo.type] == turn)
+		{
+			castleRights[cInfo.type] = INT_MAX;
+		}
+	}
+
+	// If it was a castle, undo the rock move.
+	if (last_move.castleInfo != NULL)
+	{
+		//cout << "Undoing castle" << endl;
+		Place(last_move.castleInfo->rockType, last_move.castleInfo->rockFrom);
+		Place(EMPTY, last_move.castleInfo->rockTo);
+	}
+
+	if (last_move.promoteTo != EMPTY)
+	{
+		Place(whiteToMove ? W_PAWN : B_PAWN, last_move.from);
+	}
+	else
+	{
+		Place(board[last_move.to], last_move.from);
+	}
+
+	Place(last_move.capturedPiece, last_move.to);
+	moveHistory.pop_front();
+	enPassant = moveHistory.front().isPawnDoublePush ? moveHistory.front().enPassantPosition : -1;
 }
 
 void Board::Print()

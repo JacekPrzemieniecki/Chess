@@ -25,6 +25,11 @@ Move& Game::GetLastMove()
 	return board.GetLastMove();
 }
 
+void Game::Undo()
+{
+	board.UndoMove();
+}
+
 void Game::TryMakeMove(Move& move)
 {
 	board.Print();
