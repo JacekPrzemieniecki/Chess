@@ -92,7 +92,7 @@ bool KingMove(Board& board, Move& move)
 	}
 
 	// White king-side castle
-	if (from == 115 && to == 113 && board.wkcastle && 112 == rayCast(board, 115, 112, -1))
+	if (from == 115 && to == 113 && board.wkcastle > board.turn && 112 == rayCast(board, 115, 112, -1))
 	{
 		cout << "Castling!" << endl;
 		move.isCastle = true;
@@ -102,7 +102,7 @@ bool KingMove(Board& board, Move& move)
 	}
 
 	//White queen-side castle
-	if (from == 115 && to == 117 && board.wqcastle && 119 == rayCast(board, 115, 119, 1))
+	if (from == 115 && to == 117 && board.wqcastle > board.turn && 119 == rayCast(board, 115, 119, 1))
 	{
 		cout << "Castling!" << endl;
 		move.isCastle = true;
@@ -112,7 +112,7 @@ bool KingMove(Board& board, Move& move)
 	}
 
 	// Black king-side castle
-	if (from == 4 && to == 6 && board.wqcastle && 7 == rayCast(board, 4, 7, 1))
+	if (from == 4 && to == 6 && board.bkcastle > board.turn && 7 == rayCast(board, 4, 7, 1))
 	{
 		cout << "Castling!" << endl;
 		move.isCastle = true;
@@ -122,7 +122,7 @@ bool KingMove(Board& board, Move& move)
 	}
 
 	// Black queen-side castle
-	if (from == 4 && to == 2 && board.wqcastle && 0 == rayCast(board, 4, 0, -1))
+	if (from == 4 && to == 2 && board.bqcastle > board.turn && 0 == rayCast(board, 4, 0, -1))
 	{
 		cout << "Castling!" << endl;
 		move.isCastle = true;
