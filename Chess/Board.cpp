@@ -141,11 +141,7 @@ Move Board::GetLastMove()
 
 void Board::MakeMove(Move move)
 {
-	if (board[move.to] != 0)
-	{
-		move.isCapture = true;
-		move.capturedPiece = board[move.to];
-	}
+	move.capturedPiece = board[move.to];
 
 	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
 
@@ -160,10 +156,10 @@ void Board::MakeMove(Move move)
 		}
 	}
 
-	if (move.isCastle)
+	if (move.castleInfo != NULL)
 	{
-		Place(board[move.castleFrom], move.castleTo);
-		Place(EMPTY, move.castleFrom);
+		Place(move.castleInfo->rockType, move.castleInfo->rockTo);
+		Place(EMPTY, move.castleInfo->rockFrom);
 	}
 
 	if (move.isPawnDoublePush)

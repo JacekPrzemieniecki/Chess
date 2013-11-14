@@ -10,6 +10,5 @@ to(-1)
 
 Move::Move(int _from, int _to) :
 from(_from),
-to(_to),
-isCastle(false)
+to(_to)
 {}
