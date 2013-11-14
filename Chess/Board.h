@@ -2,6 +2,7 @@
 #include "Move.h"
 #include "Piece.h"
 #include <set>
+#include <list>
 
 class Board
 {
@@ -11,6 +12,7 @@ public:
 	~Board(void);
 	int FindKing(bool white);
 	PieceType operator[](int index);
+	Move GetLastMove();
 	Move lastMove;
 	PieceType board[128];
 	std::set<int> whitePieces;
@@ -28,6 +30,7 @@ public:
 	bool wkcastle = true;
 	bool wqcastle = true;
 private:
+	std::list<Move> moveHistory;
 	void Place(PieceType piece, int x, int y);
 	void Place(PieceType piece, int position);
 };

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Board::Board(void):
+Board::Board(void) :
 whiteToMove(true)
 {
 	Place(W_ROCK, 0, 7);
@@ -34,8 +34,7 @@ whiteToMove(true)
 	}
 }
 
-
-Board::Board(Board* b, Move& m):
+Board::Board(Board* b, Move& m) :
 lastMove(m),
 whiteToMove(!b->whiteToMove),
 wkcastle(b->wkcastle),
@@ -102,7 +101,7 @@ int Board::FindKing(bool white)
 	PieceType lookingFor = white ? W_KING : B_KING;
 	for (set<int>::iterator it = tab.begin(); it != tab.end(); it++)
 	{
-		if ( board[*it] == lookingFor)
+		if (board[*it] == lookingFor)
 		{
 			cout << "Found king at " << *it << endl;
 			return *it;
@@ -122,7 +121,7 @@ void Board::Place(PieceType type, int position)
 	if (board[position] > 0)
 	{
 		whitePieces.erase(position);
-	} 
+	}
 	else if (board[position] < 0)
 	{
 		blackPieces.erase(position);
@@ -139,47 +138,56 @@ void Board::Place(PieceType type, int position)
 	}
 }
 
-void Board::MakeMove(Move m)
+Move Board::GetLastMove()
 {
-	if (m.from == 115)
+	return moveHistory.front();
+}
+
+void Board::MakeMove(Move move)
+{
+	if (move.from == 115)
 	{
 		wkcastle = wqcastle = false;
 		//cout << "White castle no longer possible" << endl;
 	}
-	if (m.from == 119 || m.to == 119)
+	if (move.from == 119 || move.to == 119)
 	{
 		wqcastle = false;
 		//cout << "White queen-side castle no longer possible" << endl;
 	}
-	if (m.from == 112 || m.to == 112)
+	if (move.from == 112 || move.to == 112)
 	{
 		wkcastle = false;
 		//cout << "White king-side castle no longer possible" << endl;
 	}
-	if (m.isCastle)
+	if (move.isCastle)
 	{
-		Place(board[m.castleFrom], m.castleTo);
+		Place(board[move.castleFrom], move.castleTo);
 		//cout << "Castling moves piece: " << (*b)[m.castleFrom] << "to: " << m.castleTo << endl;
 	}
 
-	if (m.isPawnDoublePush)
+	if (move.isPawnDoublePush)
 	{
-		enPassant = m.enPassantPosition;
-	}
-
-	if (m.promoteTo != EMPTY)
-	{
-		Place(m.promoteTo, m.to);
+		enPassant = move.enPassantPosition;
 	}
 	else
 	{
-		Place(board[m.from], m.to);
+		enPassant = -1;
 	}
 
-	Place(EMPTY, m.from);
+	if (move.promoteTo != EMPTY)
+	{
+		Place(move.promoteTo, move.to);
+	}
+	else
+	{
+		Place(board[move.from], move.to);
+	}
 
-	lastMove = m;
-	enPassant = -1;
+	Place(EMPTY, move.from);
+
+	moveHistory.push_front(move);
+	lastMove = move;
 	whiteToMove = !whiteToMove;
 }
 

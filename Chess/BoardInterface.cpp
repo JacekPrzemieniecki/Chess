@@ -40,7 +40,7 @@ BoardInterface::~BoardInterface()
 
 void BoardInterface::OnClick(int x, int y)
 {
-	if (!game.board->whiteToMove)
+	if (!game.board.whiteToMove)
 	{
 		return;
 	}
@@ -120,7 +120,7 @@ void BoardInterface::Draw()
 	//Debug
 
 	vector<Move*> moves;
-	GenerateAll(*(game.board), moves);
+	GenerateAll(game.board, moves);
 	for (vector<Move*>::iterator iter = moves.begin(); iter != moves.end(); iter++)
 	{
 		DrawGizmo((*iter)->to);
