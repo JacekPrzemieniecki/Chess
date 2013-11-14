@@ -90,10 +90,6 @@ PieceType Board::operator[](int index)
 	return board[index];
 }
 
-Board::~Board(void)
-{
-}
-
 int Board::FindKing(bool white)
 {
 	set<int>& tab = white ? whitePieces : blackPieces;

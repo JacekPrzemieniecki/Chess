@@ -10,7 +10,6 @@ public:
 	// methods
 	Board(void);
 	Board(Board*, Move&);
-	~Board(void);
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move GetLastMove();
