@@ -3,6 +3,7 @@
 #include "Piece.h"
 #include <set>
 #include <list>
+#include <limits>
 
 class Board
 {
@@ -13,7 +14,7 @@ public:
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move GetLastMove();
-	void MakeMove(const Move&);
+	void MakeMove(Move);
 	void Print();
 
 	// fields
@@ -21,13 +22,14 @@ public:
 	std::set<int> whitePieces;
 	std::set<int> blackPieces;
 	int enPassant = -1;
+	int turn = 0;
 	bool whiteToMove;
 
 	// Castle rights:
-	bool bkcastle = true;
-	bool bqcastle = true;
-	bool wkcastle = true;
-	bool wqcastle = true;
+	int bkcastle = INT_MAX;
+	int bqcastle = INT_MAX;
+	int wkcastle = INT_MAX;
+	int wqcastle = INT_MAX;
 private:
 	std::list<Move> moveHistory;
 	void Place(PieceType piece, int x, int y);

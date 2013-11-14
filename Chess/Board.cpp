@@ -138,25 +138,45 @@ Move Board::GetLastMove()
 	return moveHistory.front();
 }
 
-void Board::MakeMove(const Move& move)
+void Board::MakeMove(Move move)
 {
-	if (move.from == 115)
+	if (board[move.to] != 0)
 	{
-		wkcastle = wqcastle = false;
-		//cout << "White castle no longer possible" << endl;
+		move.isCapture = true;
+		move.capturedPiece = board[move.to];
 	}
-	if (move.from == 119 || move.to == 119)
-	{
-		wqcastle = false;
-		//cout << "White queen-side castle no longer possible" << endl;
-	}
-	if (move.from == 112 || move.to == 112)
-	{
-		wkcastle = false;
-		//cout << "White king-side castle no longer possible" << endl;
-	}
+
+	
 	if (move.isCastle)
 	{
+		if (move.from == 115)
+		{
+			wkcastle = wqcastle = turn;
+			//cout << "White castle no longer possible" << endl;
+		}
+		else if (move.from == 119 || move.to == 119)
+		{
+			wqcastle = turn;
+			//cout << "White queen-side castle no longer possible" << endl;
+		}
+		else if (move.from == 112 || move.to == 112)
+		{
+			wkcastle = turn;
+			//cout << "White king-side castle no longer possible" << endl;
+		}
+		else if (move.from == 3)
+		{
+			bkcastle = bqcastle = turn;
+		}
+		else if (move.from == 0 || move.to == 0)
+		{
+			bkcastle = turn;
+		}
+		else if (move.from == 7 || move.to == 7)
+		{
+			bqcastle = turn;
+		}
+
 		Place(board[move.castleFrom], move.castleTo);
 		//cout << "Castling moves piece: " << (*b)[m.castleFrom] << "to: " << m.castleTo << endl;
 	}
