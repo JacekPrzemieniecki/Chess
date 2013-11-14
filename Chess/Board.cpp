@@ -1,6 +1,7 @@
 #include "Board.h"
 #include "Piece.h"
 #include "MoveValidator.h"
+#include "PieceMoves.h"
 #include <iostream>
 #include <iomanip>
 
@@ -146,39 +147,23 @@ void Board::MakeMove(Move move)
 		move.capturedPiece = board[move.to];
 	}
 
-	
+	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
+
+	for (int i = 0; i < 4; i++)
+	{
+		castleMoves cInfo = castleTables[i];
+		if (castleRights[cInfo.type] < turn) continue;
+
+		if (move.from == cInfo.kingFrom)
+		{
+			castleRights[cInfo.type] = turn;
+		}
+	}
+
 	if (move.isCastle)
 	{
-		if (move.from == 115)
-		{
-			wkcastle = wqcastle = turn;
-			//cout << "White castle no longer possible" << endl;
-		}
-		else if (move.from == 119 || move.to == 119)
-		{
-			wqcastle = turn;
-			//cout << "White queen-side castle no longer possible" << endl;
-		}
-		else if (move.from == 112 || move.to == 112)
-		{
-			wkcastle = turn;
-			//cout << "White king-side castle no longer possible" << endl;
-		}
-		else if (move.from == 3)
-		{
-			bkcastle = bqcastle = turn;
-		}
-		else if (move.from == 0 || move.to == 0)
-		{
-			bkcastle = turn;
-		}
-		else if (move.from == 7 || move.to == 7)
-		{
-			bqcastle = turn;
-		}
-
 		Place(board[move.castleFrom], move.castleTo);
-		//cout << "Castling moves piece: " << (*b)[m.castleFrom] << "to: " << m.castleTo << endl;
+		Place(EMPTY, move.castleFrom);
 	}
 
 	if (move.isPawnDoublePush)
@@ -203,10 +188,12 @@ void Board::MakeMove(Move move)
 
 	moveHistory.push_front(move);
 	whiteToMove = !whiteToMove;
+	turn++;
 }
 
 void Board::Print()
 {
+	return;
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)

@@ -91,44 +91,24 @@ bool KingMove(Board& board, Move& move)
 		}
 	}
 
-	// White king-side castle
-	if (from == 115 && to == 113 && board.wkcastle > board.turn && 112 == rayCast(board, 115, 112, -1))
+	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
+	for (int i = 0; i < 4; i++)
 	{
-		cout << "Castling!" << endl;
-		move.isCastle = true;
-		move.castleFrom = 112;
-		move.castleTo = 114;
-		return !(IsAttacked(board, 115, true) || IsAttacked(board, 114, true) || IsAttacked(board, 113, true));
-	}
-
-	//White queen-side castle
-	if (from == 115 && to == 117 && board.wqcastle > board.turn && 119 == rayCast(board, 115, 119, 1))
-	{
-		cout << "Castling!" << endl;
-		move.isCastle = true;
-		move.castleFrom = 119;
-		move.castleTo = 116;
-		return !(IsAttacked(board, 115, true) || IsAttacked(board, 116, true) || IsAttacked(board, 117, true));
-	}
-
-	// Black king-side castle
-	if (from == 4 && to == 6 && board.bkcastle > board.turn && 7 == rayCast(board, 4, 7, 1))
-	{
-		cout << "Castling!" << endl;
-		move.isCastle = true;
-		move.castleFrom = 7;
-		move.castleTo = 5;
-		return !(IsAttacked(board, 4, true) || IsAttacked(board, 5, true) || IsAttacked(board, 6, true));
-	}
-
-	// Black queen-side castle
-	if (from == 4 && to == 2 && board.bqcastle > board.turn && 0 == rayCast(board, 4, 0, -1))
-	{
-		cout << "Castling!" << endl;
-		move.isCastle = true;
-		move.castleFrom = 0;
-		move.castleTo = 3;
-		return !(IsAttacked(board, 4, true) || IsAttacked(board, 3, true) || IsAttacked(board, 2, true));
+		castleMoves cInfo = castleTables[i];
+		if (from == cInfo.kingFrom &&						// King moves form initial position
+			to == cInfo.kingTo &&							// To a castle field
+			board.castleRights[cInfo.type] > board.turn &&  // Player didn't loose castle right
+			cInfo.rockTo == rayCast(board, cInfo.kingFrom, cInfo.rockTo, cInfo.kingDirection)) // No field on between king and rock is taken
+		{
+			cout << "Castling!" << endl;
+			move.isCastle = true;
+			move.castleFrom = cInfo.rockFrom;
+			move.castleTo = cInfo.rockTo;
+			return !(
+				IsAttacked(board, cInfo.kingFrom, cInfo.type > 0) ||
+				IsAttacked(board, cInfo.rockTo, cInfo.type > 0) ||
+				IsAttacked(board, cInfo.kingTo, cInfo.type > 0));
+		}
 	}
 
 	return false;
