@@ -97,6 +97,7 @@ bool ValidateCastle(Board& board, Move& move)
 				IsAttacked(board, cInfo.kingTo, cInfo.type > 0));
 		}
 	}
+	return false;
 }
 
 bool KingMove(Board& board, Move& move)
