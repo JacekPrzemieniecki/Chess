@@ -11,10 +11,6 @@ public:
 
 	castleMoves* castleInfo = NULL;
 
-	short int castleFrom;
-	short int castleTo;
-	bool isCastle = false;
-
 	PieceType capturedPiece;
 	PieceType promoteTo = EMPTY;
 	short int enPassantPosition;

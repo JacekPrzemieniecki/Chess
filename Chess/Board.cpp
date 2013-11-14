@@ -57,9 +57,9 @@ bqcastle(b->bqcastle)
 		wkcastle = false;
 		//cout << "White king-side castle no longer possible" << endl;
 	}
-	if (m.isCastle)
+	if (m.castleInfo != NULL)
 	{
-		Place((*b)[m.castleFrom], m.castleTo);
+		Place((*b)[m.castleInfo->rockFrom], m.castleInfo->rockTo);
 		//cout << "Castling moves piece: " << (*b)[m.castleFrom] << "to: " << m.castleTo << endl;
 	}
 
@@ -78,7 +78,7 @@ bqcastle(b->bqcastle)
 	}
 	for (int i = 0; i < 127; i++)
 	{
-		if ((*b)[i] == EMPTY || i == m.to || i == m.from || i == m.castleFrom || i == m.castleTo)
+		if ((*b)[i] == EMPTY || i == m.to || i == m.from || (m.castleInfo == NULL) ? false : (m.castleInfo->rockFrom == i) || (m.castleInfo == NULL) ? false : (m.castleInfo->rockTo == i))
 		{
 			continue;
 		}
