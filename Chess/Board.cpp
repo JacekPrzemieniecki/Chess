@@ -24,8 +24,8 @@ whiteToMove(true)
 	Place(B_KNIGHT, 6, 0);
 	Place(B_BISHOP, 2, 0);
 	Place(B_BISHOP, 5, 0);
-	Place(B_QUEEN, 4, 0);
-	Place(B_KING, 3, 0);
+	Place(B_QUEEN, 3, 0);
+	Place(B_KING, 4, 0);
 
 	for (int i = 0; i < 8; i++)
 	{
