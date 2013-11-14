@@ -35,7 +35,6 @@ whiteToMove(true)
 }
 
 Board::Board(Board* b, Move& m) :
-lastMove(m),
 whiteToMove(!b->whiteToMove),
 wkcastle(b->wkcastle),
 wqcastle(b->wqcastle),
@@ -143,7 +142,7 @@ Move Board::GetLastMove()
 	return moveHistory.front();
 }
 
-void Board::MakeMove(Move move)
+void Board::MakeMove(const Move& move)
 {
 	if (move.from == 115)
 	{
@@ -187,7 +186,6 @@ void Board::MakeMove(Move move)
 	Place(EMPTY, move.from);
 
 	moveHistory.push_front(move);
-	lastMove = move;
 	whiteToMove = !whiteToMove;
 }
 

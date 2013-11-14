@@ -22,7 +22,7 @@ set<int>& Game::GetBlackPieces()
 
 Move& Game::GetLastMove()
 {
-	return board.lastMove;
+	return board.GetLastMove();
 }
 
 void Game::TryMakeMove(Move& move)

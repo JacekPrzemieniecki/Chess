@@ -13,14 +13,13 @@ public:
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move GetLastMove();
-	Move lastMove;
 	PieceType board[128];
 	std::set<int> whitePieces;
 	std::set<int> blackPieces;
 	int enPassant = -1;
 	bool whiteToMove;
 
-	void MakeMove(Move);
+	void MakeMove(const Move&);
 
 	void Print();
 
