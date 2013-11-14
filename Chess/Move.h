@@ -11,6 +11,8 @@ public:
 	short int castleTo;
 	bool isCastle = false;
 
+	bool isCapture = false;
+	PieceType capturedPiece;
 	PieceType promoteTo = EMPTY;
 	short int enPassantPosition;
 	bool isPawnDoublePush = false;
