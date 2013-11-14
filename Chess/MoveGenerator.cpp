@@ -16,6 +16,25 @@ void KnightOrKingMove(int position, Board& board, vector<Move*>& result, vector<
 	}
 }
 
+void CastleMoves(int position, Board& board, vector<Move*>& result)
+{
+	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
+	for (int i = 0; i < 4; i++)
+	{
+		castleMoves cInfo = castleTables[i];
+		if (cInfo.kingFrom != position || !board.castleRights[cInfo.type]) continue;
+		Move* new_move = new Move(cInfo.kingFrom, cInfo.kingTo);
+		if (ValidateCastle(board, *new_move))
+		{
+			result.push_back(new_move);
+		}
+		else
+		{
+			delete new_move;
+		}
+	}
+}
+
 void GenerateOnRay(int start, int current, Board& board, vector<Move*>& result, int delta, bool isWhite)
 {
 	if ((current & 0x88) || (board[current] > 0 == isWhite  && board[current] != EMPTY)) return;

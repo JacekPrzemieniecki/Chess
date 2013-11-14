@@ -78,6 +78,27 @@ bool BishopMove(Board& board, int from, int to)
 	return false;
 }
 
+bool ValidateCastle(Board& board, Move& move)
+{
+	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
+	for (int i = 0; i < 4; i++)
+	{
+		castleMoves cInfo = castleTables[i];
+		if (move.from == cInfo.kingFrom &&						// King moves from initial position
+			move.to == cInfo.kingTo &&							// To a castle field
+			board.castleRights[cInfo.type] > board.turn &&  // Player didn't loose castle right
+			cInfo.rockTo == rayCast(board, cInfo.kingFrom, cInfo.rockTo, cInfo.kingDirection)) // No field on between king and rock is taken
+		{
+			cout << "Castling!" << endl;
+			move.castleInfo = &castleTables[i];
+			return !(
+				IsAttacked(board, cInfo.kingFrom, cInfo.type > 0) ||
+				IsAttacked(board, cInfo.rockTo, cInfo.type > 0) ||
+				IsAttacked(board, cInfo.kingTo, cInfo.type > 0));
+		}
+	}
+}
+
 bool KingMove(Board& board, Move& move)
 {
 	int from = move.from;
@@ -90,28 +111,7 @@ bool KingMove(Board& board, Move& move)
 			return true;
 		}
 	}
-
-	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
-	for (int i = 0; i < 4; i++)
-	{
-		castleMoves cInfo = castleTables[i];
-		if (from == cInfo.kingFrom &&						// King moves form initial position
-			to == cInfo.kingTo &&							// To a castle field
-			board.castleRights[cInfo.type] > board.turn &&  // Player didn't loose castle right
-			cInfo.rockTo == rayCast(board, cInfo.kingFrom, cInfo.rockTo, cInfo.kingDirection)) // No field on between king and rock is taken
-		{
-			cout << "Castling!" << endl;
-			move.isCastle = true;
-			move.castleFrom = cInfo.rockFrom;
-			move.castleTo = cInfo.rockTo;
-			return !(
-				IsAttacked(board, cInfo.kingFrom, cInfo.type > 0) ||
-				IsAttacked(board, cInfo.rockTo, cInfo.type > 0) ||
-				IsAttacked(board, cInfo.kingTo, cInfo.type > 0));
-		}
-	}
-
-	return false;
+	return ValidateCastle(board, move);
 }
 
 bool PawnMove(Board& board, Move& move, bool isWhite)
