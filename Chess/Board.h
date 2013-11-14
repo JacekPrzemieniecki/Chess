@@ -7,21 +7,22 @@
 class Board
 {
 public:
+	// methods
 	Board(void);
 	Board(Board*, Move&);
 	~Board(void);
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move GetLastMove();
+	void MakeMove(const Move&);
+	void Print();
+
+	// fields
 	PieceType board[128];
 	std::set<int> whitePieces;
 	std::set<int> blackPieces;
 	int enPassant = -1;
 	bool whiteToMove;
-
-	void MakeMove(const Move&);
-
-	void Print();
 
 	// Castle rights:
 	bool bkcastle = true;
