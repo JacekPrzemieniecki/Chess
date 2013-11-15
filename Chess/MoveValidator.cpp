@@ -12,7 +12,7 @@ int rayCast(Board& board, int from, int to, int delta)
 	int cur = from + delta;
 	if (cur == to) return cur;
 	// if we want do move on and the square is not empty or is invalid (& 0x88)
-	else if (board[cur] != EMPTY || cur & 0x88)
+	else if (cur & 0x88 || board[cur] != EMPTY )
 	{
 		return cur;
 	}
@@ -46,14 +46,14 @@ bool KnightMove(int from, int to)
 
 bool RockMove(Board& board, int from, int to)
 {
-	cout << "Validating Rock move from: " << from << " to: " << to << endl;
+	//cout << "Validating Rock move from: " << from << " to: " << to << endl;
 	int diff = abs(from - to);
 	bool up, down, left, right;
 	up = down = (diff % 16 == 0);
 	left = right = diff < 8;
 	up &= from > to;
 	right &= from < to;
-	cout << "up: " << up << "down: " << down << " left: " << left << " right " << right << endl;
+	//cout << "up: " << up << "down: " << down << " left: " << left << " right " << right << endl;
 	if (up) return rayCast(board, from, to, -16) == to;
 	if (down) return rayCast(board, from, to, 16) == to;
 	if (right) return rayCast(board, from, to, 1) == to;
@@ -63,14 +63,14 @@ bool RockMove(Board& board, int from, int to)
 
 bool BishopMove(Board& board, int from, int to)
 {
-	cout << "Validating Bishop move from: " << from << " to: " << to << endl;
+	//cout << "Validating Bishop move from: " << from << " to: " << to << endl;
 	int diff = abs(from - to);
 	bool ul, ur, ll, lr; // upper left, upper right...
 	ul = (from > to) && (diff % 17 == 0);
 	ur = (from > to) && (diff % 15 == 0);
 	ll = (from < to) && (diff % 15 == 0);
 	lr = (from < to) && (diff % 17 == 0);
-	cout << "ul: " << ul << "ur: " << ur << " ll: " << ll << " lr " << lr << endl;
+	//cout << "ul: " << ul << "ur: " << ur << " ll: " << ll << " lr " << lr << endl;
 	if (ul) return rayCast(board, from, to, -17) == to;
 	if (ur) return rayCast(board, from, to, -15) == to;
 	if (ll) return rayCast(board, from, to, 15) == to;
@@ -133,7 +133,7 @@ bool PawnMove(Board& board, Move& move, bool isWhite)
 	{
 		return true;
 	}
-	cout << board[move.from + 16] << endl;
+	//cout << board[move.from + 16] << endl;
 	if (diff == 32 && board[move.from + 32 * direction] == EMPTY &&
 		board[move.from + 16 * direction] == EMPTY && // Pawn double push
 		((isWhite && move.from / 16 == 6) || //for white
@@ -147,7 +147,7 @@ bool PawnMove(Board& board, Move& move, bool isWhite)
 
 bool ValidateMove(Board& board, Move& move)
 {
-	cout << "Validating move from: " << move.from << " to: " << move.to << endl;
+	//cout << "Validating move from: " << move.from << " to: " << move.to << endl;
 	PieceType moving = board[move.from];
 	PieceType target = board[move.to];
 
@@ -186,19 +186,21 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 	int sign = byBlack ? -1 : 1;
 	for (vector<int>::iterator it = knightTab.begin(); it != knightTab.end(); it++)
 	{
-		if (board[position + *it] == W_KNIGHT * sign)
+		int target = position + *it;
+		if (!(target & 0x88) && board[target] == W_KNIGHT * sign)
 		{
-			//cout << "It is - by a king" << endl;
+			//cout << "It is - by a knight" << endl;
 			return true;
 		}
 	}
 
 	for (vector<int>::iterator it = kingTab.begin(); it != kingTab.end(); it++)
 	{
-		if (board[position + *it] == W_KING * sign)
+		int target = position + *it;
+		if (!(target && 0x88) && board[target] == W_KING * sign)
 		{
 
-			//cout << "It is - by a knight" << endl;
+			//cout << "It is - by a king" << endl;
 			return true;
 		}
 	}
@@ -230,11 +232,11 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 	return false;
 }
 
-bool IsMoveLegal(Board& board, Move& move, bool whiteMove)
+bool IsMoveLegal(Board& board, Move& move)
 {
 	board.MakeMove(move);
 	bool legal = true;
-	if (IsAttacked(board, board.FindKing(whiteMove), whiteMove))
+	if (IsAttacked(board, board.FindKing(!board.whiteToMove), !board.whiteToMove))
 	{
 		legal = false;
 	}
