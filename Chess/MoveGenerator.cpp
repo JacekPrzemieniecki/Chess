@@ -60,7 +60,8 @@ void BishopOrRockMove(int position, Board& board, vector<Move*>& result, vector<
 vector<PieceType> promoteTab = { W_ROCK, W_BISHOP, W_KNIGHT, W_QUEEN };
 void CheckForPromoteAndAdd(int position, int to, vector<Move*>& result, bool isWhite, bool isDoublePush)
 {
-	if (to / 16 == 0 || to / 16 == 7)
+	int rank = to / 16;
+	if (rank == 0 || rank == 7)
 	{
 		for (vector<PieceType>::iterator it = promoteTab.begin(); it != promoteTab.end(); it++)
 		{
@@ -80,24 +81,26 @@ void CheckForPromoteAndAdd(int position, int to, vector<Move*>& result, bool isW
 void PawnMove(int position, Board& board, vector<Move*>& result, bool isWhite)
 {
 	int direction = isWhite ? -1 : 1;
-	if (board[position + 16 * direction] == EMPTY)
+	int forward = position + 16 * direction;
+	if (!(forward & 0x88) && board[forward] == EMPTY)
 	{
 		CheckForPromoteAndAdd(position, position + 16 * direction, result, isWhite, false);
 	}
 	int captureLeft = position + 15 * direction;
-	if ((board[captureLeft] * direction > 0 || board.enPassant == captureLeft) && !(captureLeft & 0x88))
+	if (!(captureLeft & 0x88) && (board[captureLeft] * direction > 0 || board.enPassant == captureLeft) )
 	{
 		CheckForPromoteAndAdd(position, position + 15 * direction, result, isWhite, false);
 	}
 	int captureRight = position + 17 * direction;
-	if ((board[captureRight] * direction > 0 || board.enPassant == captureRight) && !(captureRight & 0x88))
+	if (!(captureRight & 0x88) && (board[captureRight] * direction > 0 || board.enPassant == captureRight))
 	{
 		CheckForPromoteAndAdd(position, position + 17 * direction, result, isWhite, false);
 	}
-	if (board[position + 16 * direction] == EMPTY && // Pawn double push
-		board[position + 32 * direction] == EMPTY &&
-		((isWhite && position / 16 == 6) || //for white
-		(!isWhite && position / 16 == 1)))   // and black
+	// Pawn double push
+	if (((isWhite && position / 16 == 6) || //for white
+		(!isWhite && position / 16 == 1)) &&  // and black
+		board[forward] == EMPTY && 
+		board[position + 32 * direction] == EMPTY)
 	{
 		CheckForPromoteAndAdd(position, position + 32 * direction, result, isWhite, true);
 	}
@@ -114,7 +117,7 @@ void Generate(int position, Board& board, vector<Move*>& result)
 	case B_KING:
 	case W_KING:
 		KnightOrKingMove(position, board, result, kingTab);
-		//CastleMoves(position, board, result);
+		CastleMoves(position, board, result);
 		break;
 	case B_BISHOP:
 	case W_BISHOP:
@@ -149,21 +152,22 @@ void GenerateAll(Board& board, vector<Move*>& result)
 
 bool IsMovePossible(Board& board)
 {
-	cout << "Checking for possible moves" << endl;
+	//cout << "Checking for possible moves" << endl;
 	vector<Move*> possibleMoves;
+	possibleMoves.reserve(100);
 	bool possible = false;
 	GenerateAll(board, possibleMoves);
-	cout << "Found " << possibleMoves.size() << " moves:" << endl;
+	//cout << "Found " << possibleMoves.size() << " moves:" << endl;
 	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
 	{
-		cout << (*it)->from << "->" << (*it)->to << " ";
-		if (IsMoveLegal(board, **it, board.whiteToMove))
+		//cout << (*it)->from << "->" << (*it)->to << " ";
+		if (IsMoveLegal(board, **it))
 		{
 			possible = true;
-			cout << "legal" << endl;
+			//cout << "legal" << endl;
 			break;
 		}
-		cout << "ill; ";
+		//cout << "ill; ";
 	}
 	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
 	{
