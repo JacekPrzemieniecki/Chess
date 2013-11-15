@@ -2,8 +2,6 @@
 class Test
 {
 public:
-	Test();
-	~Test();
-	void GeneratorTest();
+	void GeneratorTest(int depth);
 };
 

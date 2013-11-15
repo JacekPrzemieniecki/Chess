@@ -39,7 +39,7 @@ void Game::TryMakeMove(Move& move)
 		cout << "Move invalid";
 		return;
 	}
-	if (!IsMoveLegal(board, move, board.whiteToMove))
+	if (!IsMoveLegal(board, move))
 	{
 		cout << "Move leaves king in check";
 		return;

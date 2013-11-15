@@ -3,48 +3,47 @@
 #include "MoveGenerator.h"
 #include <iostream>
 #include <vector>
-
-Test::Test()
-{
-}
-
-
-Test::~Test()
-{
-}
+#include "MoveValidator.h"
 
 
 int countPossibilities(Board& b, int depth)
 {
 	int poss = 0;
 	vector<Move*> possibleMoves;
+	possibleMoves.reserve(100);
 	GenerateAll(b, possibleMoves);
 	if (depth == 0)
 	{
-		int s = possibleMoves.size();
-		for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
+		for (Move* movePtr : possibleMoves)
 		{
-			delete *it;
+			if (IsMoveLegal(b, *movePtr))
+			{
+				poss++;
+			}
+			delete movePtr;
 		}
-		return s;
 	}
 	else
 	{
-		for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
+		for (Move* movePtr : possibleMoves)
 		{
-			b.MakeMove(**it);
-			poss += countPossibilities(b, depth - 1);
-			b.UndoMove();
-			delete *it;
+			if (IsMoveLegal(b, *movePtr))
+			{
+				b.MakeMove(*movePtr);
+				poss += countPossibilities(b, depth - 1);
+				b.UndoMove();
+			}
+			delete movePtr;
 		}
 	}
 	return poss;
 }
 
-void Test::GeneratorTest()
+void Test::GeneratorTest(int depth)
 {
 	Board b;
-	for (int i = 0; i < 6; i++)
+	cout << "Testing Move generator" << endl;
+	for (int i = 0; i < depth; i++)
 	{
 		cout << "Depth: " << i << " Possibilities: " << countPossibilities(b, i) << endl;
 	}

@@ -14,5 +14,5 @@ public:
 	PieceType capturedPiece;
 	PieceType promoteTo = EMPTY;
 	short int enPassantPosition;
-	bool isPawnDoublePush = false;
+	bool isPawnDoublePush;
 };

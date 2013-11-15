@@ -3,18 +3,27 @@
 #include "Test.h"
 #include <iostream>
 
+using namespace std;
+
 void test()
 {
 	Test t;
 	clock_t begin = clock();
-	t.GeneratorTest();
+	t.GeneratorTest(5);
 	clock_t end = clock();
 	std::cout << "Time: " << double(end - begin) / CLOCKS_PER_SEC << std::endl;
 }
 
+void sizes()
+{
+	cout << "Board: " << sizeof(Board) << endl;
+	cout << "Move: " << sizeof(Move) << endl;
+}
+
 int main()
 {
-	//test();
+	test();
+	sizes();
 	sf::RenderWindow window(sf::VideoMode(700, 700), "Chess", sf::Style::Close);
 	window.setFramerateLimit(30);
 	BoardInterface boardInterface(window);
@@ -28,6 +37,10 @@ int main()
 			else if (event.type == sf::Event::MouseButtonPressed)
 			{
 				boardInterface.OnClick(event.mouseButton.x, event.mouseButton.y);
+			}
+			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace)
+			{
+				boardInterface.Undo();
 			}
 		}
 
