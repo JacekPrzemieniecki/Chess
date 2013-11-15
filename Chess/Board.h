@@ -4,6 +4,7 @@
 #include <set>
 #include <unordered_map>
 #include <list>
+#include <array>
 
 class Board
 {
@@ -18,18 +19,13 @@ public:
 	void Print();
 
 	// fields
-	PieceType board[128];
+	std::array<PieceType, 128> board;
 	std::set<int> whitePieces;
 	std::set<int> blackPieces;
-	int enPassant = -1;
-	int turn = 0;
+	int enPassant;
+	int turn;
 	bool whiteToMove;	
-	std::unordered_map<PieceType, int> castleRights = std::unordered_map<PieceType, int>({
-		{ W_KING, INT_MAX },
-		{ W_QUEEN, INT_MAX },
-		{ B_KING, INT_MAX },
-		{ B_QUEEN, INT_MAX }
-	});
+	std::unordered_map<PieceType, int> castleRights;
 
 	// Castle rights:
 	bool bkcastle = true;

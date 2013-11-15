@@ -8,7 +8,16 @@
 using namespace std;
 
 Board::Board(void) :
-whiteToMove(true)
+whiteToMove(true),
+board{ { EMPTY } },
+enPassant(-1),
+turn(0),
+castleRights({
+	{ W_KING, INT_MAX },
+	{ W_QUEEN, INT_MAX },
+	{ B_KING, INT_MAX },
+	{ B_QUEEN, INT_MAX }
+})
 {
 	Place(W_ROCK, 0, 7);
 	Place(W_ROCK, 7, 7);
@@ -37,6 +46,8 @@ whiteToMove(true)
 
 PieceType Board::operator[](int index)
 {
+	if (index & 0x88)
+		throw exception();
 	return board[index];
 }
 
@@ -48,10 +59,11 @@ int Board::FindKing(bool white)
 	{
 		if (board[*it] == lookingFor)
 		{
-			cout << "Found king at " << *it << endl;
+			//cout << "Found king at " << *it << endl;
 			return *it;
 		}
 	}
+	Print();
 	throw exception();
 }
 
@@ -136,7 +148,9 @@ void Board::MakeMove(Move move)
 
 void Board::UndoMove()
 {
-	Move last_move = moveHistory.front();
+	if (moveHistory.size() == 0)
+		throw exception();
+	Move lastMove = moveHistory.front();
 	//cout << "Undoing move from " << last_move.from << " to: " << last_move.to << endl;
 	whiteToMove = !whiteToMove;
 	turn--;
@@ -152,30 +166,37 @@ void Board::UndoMove()
 	}
 
 	// If it was a castle, undo the rock move.
-	if (last_move.castleInfo != NULL)
+	if (lastMove.castleInfo != NULL)
 	{
 		//cout << "Undoing castle" << endl;
-		Place(last_move.castleInfo->rockType, last_move.castleInfo->rockFrom);
-		Place(EMPTY, last_move.castleInfo->rockTo);
+		Place(lastMove.castleInfo->rockType, lastMove.castleInfo->rockFrom);
+		Place(EMPTY, lastMove.castleInfo->rockTo);
 	}
 
-	if (last_move.promoteTo != EMPTY)
+	if (lastMove.promoteTo != EMPTY)
 	{
-		Place(whiteToMove ? W_PAWN : B_PAWN, last_move.from);
+		Place(whiteToMove ? W_PAWN : B_PAWN, lastMove.from);
 	}
 	else
 	{
-		Place(board[last_move.to], last_move.from);
+		Place(board[lastMove.to], lastMove.from);
 	}
 
-	Place(last_move.capturedPiece, last_move.to);
+	Place(lastMove.capturedPiece, lastMove.to);
 	moveHistory.pop_front();
-	enPassant = moveHistory.front().isPawnDoublePush ? moveHistory.front().enPassantPosition : -1;
+	if (moveHistory.size() != 0)
+	{
+		enPassant = moveHistory.front().isPawnDoublePush ? moveHistory.front().enPassantPosition : -1;
+	}
 }
 
 void Board::Print()
 {
-	return;
+	cout << "Move history: " << endl;
+	for (Move m : moveHistory)
+	{
+		cout << "From: " << m.from << " to: " << m.to << endl;
+	}
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
