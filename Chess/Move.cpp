@@ -15,5 +15,6 @@ castleInfo(NULL),
 capturedPiece(EMPTY),
 promoteTo(EMPTY),
 enPassantPosition(-1),
+isEnPassant(false),
 isPawnDoublePush(false)
 {}

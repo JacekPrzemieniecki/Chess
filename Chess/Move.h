@@ -15,4 +15,5 @@ public:
 	PieceType promoteTo = EMPTY;
 	short int enPassantPosition;
 	bool isPawnDoublePush;
+	bool isEnPassant;
 };

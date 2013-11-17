@@ -90,7 +90,7 @@ bool ValidateCastle(Board& board, Move& move)
 		if (move.from == cInfo.kingFrom &&						// King moves from initial position
 			move.to == cInfo.kingTo &&							// To a castle field
 			board.castleRights[cInfo.type] > board.turn &&  // Player didn't loose castle right
-			cInfo.kingTo == rayCast(board, cInfo.kingFrom, cInfo.kingTo, cInfo.kingDirection)) // No field on between king and rock is taken
+			cInfo.rockFrom == rayCast(board, cInfo.kingFrom, cInfo.rockFrom, cInfo.kingDirection)) // No field on between king and rock is taken
 		{
 			//cout << "Castling!" << endl;
 			move.castleInfo = &castleTables[i];
@@ -226,8 +226,10 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 		}
 	}
 
-	if (board[position + (15 * sign)] == W_PAWN * sign) return true;
-	if (board[position + (17 * sign)] == W_PAWN * sign) return true;
+	int attack_left = position + (15 * sign);
+	int attack_right = position + (17 * sign);
+	if (!(attack_left & 0x88) && board[attack_left] == W_PAWN * sign) return true;
+	if (!(attack_right & 0x88) &&  board[attack_right] == W_PAWN * sign) return true;
 
 	return false;
 }

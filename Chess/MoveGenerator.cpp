@@ -35,24 +35,24 @@ void CastleMoves(int position, Board& board, vector<Move*>& result)
 	}
 }
 
-void GenerateOnRay(int start, int current, Board& board, vector<Move*>& result, int delta, bool isWhite)
+void GenerateOnRay(int start, int current, Board& board, vector<Move*>& result, int delta)
 {
-	if ((current & 0x88) || (board[current] > 0 == isWhite  && board[current] != EMPTY)) return;
+	// Attacking out of bonds and attacking own pieces is illegal.
+	if ((current & 0x88) || board[current] * board[start] > 0 ) return;
 	
 	result.push_back(new Move(start, current));
 
 	if (board[current] == EMPTY)
 	{
-		GenerateOnRay(start, current + delta, board, result, delta, isWhite);
+		GenerateOnRay(start, current + delta, board, result, delta);
 	}
 }
 
 void BishopOrRockMove(int position, Board& board, vector<Move*>& result, vector<int>& tab)
 {
-	bool isWhite = board[position] > 0;
 	for (vector<int>::iterator it = tab.begin(); it != tab.end(); it++)
 	{
-		GenerateOnRay(position, position + *it, board, result, *it, isWhite);
+		GenerateOnRay(position, position + *it, board, result, *it);
 	}
 }
 

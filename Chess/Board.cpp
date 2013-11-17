@@ -81,7 +81,7 @@ castleRights({
 			// Empty places
 			if (c >= '1' && c <= '7')
 			{
-				file += (c - '0'); // Char to number conversion
+				file += (c - '1'); // Char to number conversion
 			}
 			else
 			{
@@ -129,8 +129,8 @@ castleRights({
 	}
 	else
 	{
-		int epFile = positionString[cursor] - 'a' + 1;
-		int epRank = positionString[cursor + 1] - '1';
+		int epFile = positionString[cursor] - 'a';
+		int epRank = 8 - (positionString[cursor + 1] - '0');
 		enPassant = epRank * 16 + epFile;
 		cursor += 3;
 	}
@@ -155,7 +155,11 @@ castleRights({
 PieceType Board::operator[](int index)
 {
 	if (index & 0x88)
+	{
+		cout << "Debug: trying to access illegal position: " << index << endl;
+		Print();
 		throw exception();
+	}
 	return board[index];
 }
 
@@ -224,7 +228,7 @@ void Board::MakeMove(Move move)
 		castleMoves cInfo = castleTables[i];
 		if (castleRights[cInfo.type] < turn) continue;
 
-		if (move.from == cInfo.kingFrom)
+		if (move.from == cInfo.kingFrom || move.from == cInfo.rockFrom || move.to == cInfo.rockFrom)
 		{
 			castleRights[cInfo.type] = turn;
 		}
@@ -236,9 +240,18 @@ void Board::MakeMove(Move move)
 		Place(EMPTY, move.castleInfo->rockFrom);
 	}
 
+	if (move.to == enPassant)
+	{
+		move.isEnPassant = true;
+		int epPawnPosition = move.to + 16 * (whiteToMove ? 1 : -1);
+		cout << "enPassant capture " << epPawnPosition << endl;
+		Place(EMPTY, epPawnPosition);
+		Print();
+	}
+
 	if (move.isPawnDoublePush)
 	{
-		enPassant = move.enPassantPosition;
+		enPassant = (move.from + move.to)/2;
 	}
 	else
 	{
@@ -288,20 +301,27 @@ void Board::UndoMove()
 		Place(EMPTY, lastMove.castleInfo->rockTo);
 	}
 
+	PieceType movingPiece = board[lastMove.to];
 	if (lastMove.promoteTo != EMPTY)
 	{
 		Place(whiteToMove ? W_PAWN : B_PAWN, lastMove.from);
 	}
 	else
 	{
-		Place(board[lastMove.to], lastMove.from);
+		Place(movingPiece, lastMove.from);
+	}
+
+	if (lastMove.isEnPassant)
+	{
+		Place((whiteToMove ? B_PAWN : W_PAWN), lastMove.to + 16 * (whiteToMove ? 1 : -1));
 	}
 
 	Place(lastMove.capturedPiece, lastMove.to);
 	moveHistory.pop_front();
 	if (moveHistory.size() != 0)
 	{
-		enPassant = moveHistory.front().isPawnDoublePush ? moveHistory.front().enPassantPosition : -1;
+		Move& previousMove = moveHistory.front();
+		enPassant = previousMove.isPawnDoublePush ? (previousMove.from + previousMove.to)/2 : -1;
 	}
 }
 
@@ -310,7 +330,12 @@ void Board::Print()
 	cout << "Move history: " << endl;
 	for (Move m : moveHistory)
 	{
-		cout << "From: " << m.from << " to: " << m.to << endl;
+		cout << "From: " << m.from << " to: " << m.to << endl <<
+			"captured: " << m.capturedPiece << endl;
+		if (m.castleInfo != NULL)
+		{
+			cout << "Move was a castle " << m.castleInfo->type << endl;
+		}
 	}
 	for (int i = 0; i < 8; i++)
 	{

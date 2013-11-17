@@ -1,6 +1,7 @@
 #pragma once
 #include "Move.h"
 #include "Piece.h"
+#include <string>
 #include <set>
 #include <unordered_map>
 #include <list>
@@ -11,6 +12,7 @@ class Board
 public:
 	// methods
 	Board(void);
+	Board(string position);
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move GetLastMove();
