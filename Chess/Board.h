@@ -26,7 +26,8 @@ public:
 	std::set<int> blackPieces;
 	int enPassant;
 	int turn;
-	bool whiteToMove;	
+	bool whiteToMove;
+	bool kingDead;
 	std::unordered_map<PieceType, int> castleRights;
 
 	// Castle rights:

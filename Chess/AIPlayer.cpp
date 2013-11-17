@@ -14,21 +14,21 @@ using namespace std;
 
 namespace AIPlayer
 {
-	const int searchDepth = 5;
+	const int searchDepth = 4;
 
 	static unordered_map<PieceType, int> pieceValues{
-		{ W_PAWN, 1 },
-		{ B_PAWN, -1 },
-		{ W_BISHOP, 3 },
-		{ B_BISHOP, -3 },
-		{ W_KNIGHT, 3 },
-		{ B_KNIGHT, -3 },
-		{ W_ROCK, 5 },
-		{ B_ROCK, -5 },
-		{ W_QUEEN, 9 },
-		{ B_QUEEN, -9 },
-		{ W_KING, 1000 },
-		{ B_KING, -1000 }
+		{ W_PAWN, 10 },
+		{ B_PAWN, -10 },
+		{ W_BISHOP, 30 },
+		{ B_BISHOP, -30 },
+		{ W_KNIGHT, 30 },
+		{ B_KNIGHT, -30 },
+		{ W_ROCK, 50 },
+		{ B_ROCK, -50 },
+		{ W_QUEEN, 90 },
+		{ B_QUEEN, -90 },
+		{ W_KING, 10000 },
+		{ B_KING, -10000 }
 };
 
 	int EvaluateBoard(Board& board, bool maximizing = true)
@@ -43,11 +43,25 @@ namespace AIPlayer
 			value += pieceValues[board[piecePosition]];
 		}
 
+		vector<Move*> possibleMoves;
+		possibleMoves.reserve(100);
+		GenerateAll(board, possibleMoves);
+		value += possibleMoves.size();
+		for (Move* m : possibleMoves)
+		{
+			delete m;
+		}
+
 		return maximizing? value : -value;
 	}
 
 	int EvaluateMove(Board& board, int alpha, int beta, int depth, bool maximizing)
 	{
+		if (board.kingDead)
+		{
+			return maximizing ? -999111 : 999111;
+		}
+
 		if (depth == 0)
 		{
 			return EvaluateBoard(board);

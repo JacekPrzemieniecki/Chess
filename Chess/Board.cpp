@@ -26,6 +26,7 @@ whiteToMove(true),
 board{ { EMPTY } },
 enPassant(-1),
 turn(0),
+kingDead(false),
 castleRights({
 	{ W_KING, INT_MAX },
 	{ W_QUEEN, INT_MAX },
@@ -60,6 +61,7 @@ castleRights({
 
 Board::Board(string positionString):
 board{ { EMPTY } },
+kingDead(false),
 castleRights({
 	{ W_KING, 0 },
 	{ W_QUEEN, 0 },
@@ -168,6 +170,10 @@ PieceType Board::operator[](int index)
 
 int Board::FindKing(bool white)
 {
+	if (kingDead)
+	{
+		return -1;
+	}
 	set<int>& tab = white ? whitePieces : blackPieces;
 	PieceType lookingFor = white ? W_KING : B_KING;
 	for (set<int>::iterator it = tab.begin(); it != tab.end(); it++)
@@ -225,6 +231,12 @@ Move Board::GetLastMove()
 void Board::MakeMove(Move move)
 {
 	move.capturedPiece = board[move.to];
+
+	// This is not valid in normal play, but it helps the AI.
+	if (move.capturedPiece == B_KING || move.capturedPiece == W_KING)
+	{
+		kingDead = true;
+	}
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -284,6 +296,7 @@ void Board::UndoMove()
 	//cout << "Undoing move from " << last_move.from << " to: " << last_move.to << endl;
 	whiteToMove = !whiteToMove;
 	turn--;
+	kingDead = false;
 
 	// If castle rights were lost this turn, restore them.
 	for (int i = 0; i < 4; i++)
