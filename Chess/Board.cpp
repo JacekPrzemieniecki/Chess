@@ -1,11 +1,25 @@
 #include "Board.h"
-#include "Piece.h"
 #include "MoveValidator.h"
 #include "PieceMoves.h"
 #include <iostream>
 #include <iomanip>
 
 using namespace std;
+
+unordered_map<char, PieceType> pieceChars{
+	{ 'p', B_PAWN },
+	{ 'n', B_KNIGHT },
+	{ 'b', B_BISHOP },
+	{ 'r', B_ROCK },
+	{ 'q', B_QUEEN },
+	{ 'k', B_KING },
+	{ 'P', W_PAWN },
+	{ 'N', W_KNIGHT },
+	{ 'B', W_BISHOP },
+	{ 'R', W_ROCK },
+	{ 'Q', W_QUEEN },
+	{ 'K', W_KING }
+};
 
 Board::Board(void) :
 whiteToMove(true),
@@ -41,6 +55,100 @@ castleRights({
 	{
 		Place(W_PAWN, i, 6);
 		Place(B_PAWN, i, 1);
+	}
+}
+
+Board::Board(string positionString):
+board{ { EMPTY } },
+castleRights({
+	{ W_KING, 0 },
+	{ W_QUEEN, 0 },
+	{ B_KING, 0 },
+	{ B_QUEEN, 0 }
+})
+{
+
+	int cursor = 0;
+
+	int rank = 0;
+	while (positionString[cursor] != ' ')
+	{
+		int file = 0;
+		int deb = cursor;
+		while (positionString[cursor] != '/')
+		{
+			char c = positionString[cursor];
+			// Empty places
+			if (c >= '1' && c <= '7')
+			{
+				file += (c - '0'); // Char to number conversion
+			}
+			else
+			{
+				Place(pieceChars[c], rank * 16 + file);
+			}
+			if (positionString[cursor + 1] == ' ') break;
+			cursor++;
+			file++;
+		}
+		cursor++;
+		file = 0;
+		rank++;
+	}
+	cursor++;
+	whiteToMove = positionString[cursor] == 'w';
+	cursor += 2;
+
+	while (positionString[cursor] != ' ')
+	{
+		switch (positionString[cursor])
+		{
+		case 'K':
+			castleRights[W_KING] = INT_MAX;
+			break;
+		case 'Q':
+			castleRights[W_QUEEN] = INT_MAX;
+			break;
+		case 'k':
+			castleRights[B_KING] = INT_MAX;
+			break;
+		case 'q':
+			castleRights[B_QUEEN] = INT_MAX;
+			break;
+		default:
+			break;
+		}
+		cursor++;
+	}
+	cursor++;
+
+	if (positionString[cursor] == '-')
+	{
+		enPassant = -1;
+		cursor += 2;
+	}
+	else
+	{
+		int epFile = positionString[cursor] - 'a' + 1;
+		int epRank = positionString[cursor + 1] - '1';
+		enPassant = epRank * 16 + epFile;
+		cursor += 3;
+	}
+	
+	// TODO: Half-move clock
+	while (positionString[cursor] != ' ')
+	{
+		cursor++;
+	}
+	cursor++;
+
+	if (cursor == positionString.size() - 1)
+	{
+		turn = positionString[cursor] - '0';
+	}
+	else
+	{
+		turn = (positionString[cursor] - '0') * 10 + (positionString[cursor + 1] - '0');
 	}
 }
 
@@ -97,7 +205,14 @@ void Board::Place(PieceType type, int position)
 
 Move Board::GetLastMove()
 {
-	return moveHistory.front();
+	if (moveHistory.size() > 0)
+	{
+		return moveHistory.front();
+	}
+	else
+	{
+		return Move();
+	}
 }
 
 void Board::MakeMove(Move move)

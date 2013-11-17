@@ -5,6 +5,12 @@
 
 using namespace std;
 
+Game::Game():
+board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+{
+
+}
+
 PieceType Game::GetPiece(int position)
 {
 	return board[position];

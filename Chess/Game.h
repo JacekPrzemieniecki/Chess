@@ -8,6 +8,7 @@
 class Game
 {
 public:
+	Game();
 	void TryMakeMove(Move& move);
 	void Undo();
 	PieceType GetPiece(int position);
