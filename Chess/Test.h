@@ -2,6 +2,7 @@
 class Test
 {
 public:
-	void GeneratorTest(int depth);
+	void TestMoveMaking();
+	void GeneratorTest();
 };
 
