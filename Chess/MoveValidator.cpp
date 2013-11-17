@@ -111,9 +111,9 @@ bool KingMove(Board& board, Move& move)
 	int from = move.from;
 	int to = move.to;
 	int diff = to - from;
-	for (vector<int>::iterator it = kingTab.begin(); it != kingTab.end(); it++)
+	for (int delta : kingTab)
 	{
-		if (*it == diff)
+		if (delta == diff)
 		{
 			return true;
 		}
@@ -197,9 +197,8 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 	for (vector<int>::iterator it = kingTab.begin(); it != kingTab.end(); it++)
 	{
 		int target = position + *it;
-		if (!(target && 0x88) && board[target] == W_KING * sign)
+		if (!(target & 0x88) && board[target] == W_KING * sign)
 		{
-
 			//cout << "It is - by a king" << endl;
 			return true;
 		}
