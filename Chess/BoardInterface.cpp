@@ -25,7 +25,8 @@ void BoardInterface::DrawGizmo(int x, int y)
 }
 
 BoardInterface::BoardInterface(sf::RenderWindow& _window) :
-window(_window)
+window(_window),
+game()
 {
 	sf::Vector2u size = window.getSize();
 	screenW = size.x;
@@ -121,16 +122,16 @@ void BoardInterface::Draw()
 
 	//Debug
 
-	vector<Move*> moves;
-	GenerateAll(game.board, moves);
-	for (vector<Move*>::iterator iter = moves.begin(); iter != moves.end(); iter++)
-	{
-		DrawGizmo((*iter)->to);
-	}
-	for (vector<Move*>::iterator it = moves.begin(); it != moves.end(); it++)
-	{
-		delete *it;
-	}
+	//vector<Move*> moves;
+	//GenerateAll(game.board, moves);
+	//for (vector<Move*>::iterator iter = moves.begin(); iter != moves.end(); iter++)
+	//{
+	//	DrawGizmo((*iter)->to);
+	//}
+	//for (vector<Move*>::iterator it = moves.begin(); it != moves.end(); it++)
+	//{
+	//	delete *it;
+	//}
 
 	//vector<int> whites = game.GetWhitePieces();
 
