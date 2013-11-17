@@ -1,14 +1,15 @@
 #include "Game.h"
 #include "MoveGenerator.h"
 #include "MoveValidator.h"
+#include "AIPlayer.h"
 #include <iostream>
+#include <thread>
 
 using namespace std;
 
 Game::Game():
 board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 {
-
 }
 
 PieceType Game::GetPiece(int position)
@@ -52,21 +53,18 @@ void Game::TryMakeMove(Move& move)
 	}
 	cout << "Move valid" << endl;
 	board.MakeMove(move);
-	board.Print();
+	//board.Print();
 	if (!IsMovePossible(board))
 	{
 		cout << "Game Over" << endl;
 		gameOver = true;
 		return;
 	}
-	Move aiMove = aiPlayer.MakeMove(board);
-	cout << "Ai moving from: " << aiMove.from << " to: " << aiMove.to << endl;
-	board.MakeMove(aiMove);
-	board.Print();
-	if (!IsMovePossible(board))
+
+	if (!board.whiteToMove)
 	{
-		cout << "Game Over" << endl;
-		gameOver = true;
-		return;
+		thread t(AIPlayer::MakeMove, ref(*this));
+		t.detach();
 	}
+	
 }

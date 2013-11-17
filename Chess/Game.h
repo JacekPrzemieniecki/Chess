@@ -2,7 +2,6 @@
 
 #include "Board.h"
 #include "Move.h"
-#include "AIPlayer.h"
 #include <set>
 
 class Game
@@ -18,6 +17,4 @@ public:
 
 	bool gameOver = false;
 	Board board;
-private:
-	AIPlayer aiPlayer;
 };
