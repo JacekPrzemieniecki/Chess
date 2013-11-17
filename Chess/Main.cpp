@@ -5,11 +5,12 @@
 
 using namespace std;
 
-void test()
+void  test()
 {
 	Test t;
 	clock_t begin = clock();
-	t.GeneratorTest(5);
+	t.GeneratorTest();
+	//t.TestMoveMaking();
 	clock_t end = clock();
 	std::cout << "Time: " << double(end - begin) / CLOCKS_PER_SEC << std::endl;
 }
@@ -22,8 +23,8 @@ void sizes()
 
 int main()
 {
-	test();
-	sizes();
+	//test();
+	//sizes();
 	sf::RenderWindow window(sf::VideoMode(700, 700), "Chess", sf::Style::Close);
 	window.setFramerateLimit(30);
 	BoardInterface boardInterface(window);

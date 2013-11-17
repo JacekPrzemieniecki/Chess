@@ -39,21 +39,19 @@ void Game::Undo()
 
 void Game::TryMakeMove(Move& move)
 {
-	board.Print();
-	cout << "Asked to move from: " << move.from << " to: " << move.to << endl;
+	//cout << "Asked to move from: " << move.from << " to: " << move.to << endl;
 	if (!ValidateMove(board, move))
 	{
-		cout << "Move invalid";
+		//cout << "Move invalid";
 		return;
 	}
 	if (!IsMoveLegal(board, move))
 	{
-		cout << "Move leaves king in check";
+		//cout << "Move leaves king in check";
 		return;
 	}
-	cout << "Move valid" << endl;
+	//cout << "Move valid" << endl;
 	board.MakeMove(move);
-	//board.Print();
 	if (!IsMovePossible(board))
 	{
 		cout << "Game Over" << endl;
@@ -63,6 +61,7 @@ void Game::TryMakeMove(Move& move)
 
 	if (!board.whiteToMove)
 	{
+		//AIPlayer::MakeMove(*this);
 		thread t(AIPlayer::MakeMove, ref(*this));
 		t.detach();
 	}

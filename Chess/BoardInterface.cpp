@@ -1,11 +1,5 @@
 #include "BoardInterface.h"
-#include <iostream>
 #include <vector>
-
-// Debug
-#include "MoveValidator.h"
-#include "MoveGenerator.h"
-// /Debug
 
 using namespace std;
 
@@ -53,7 +47,7 @@ void BoardInterface::OnClick(int x, int y)
 		PieceType p = promoteWindow.OnClick(x, y);
 		if (p != EMPTY)
 		{
-			cout << "Promotion to: " << p << endl;
+			//cout << "Promotion to: " << p << endl;
 			Move move(selectedPosition, promoteTo);
 			move.promoteTo = p;
 
@@ -75,29 +69,23 @@ void BoardInterface::OnClick(int x, int y)
 	int debug_y = (y - border) / tileSize;
 	// /Debug
 
-	cout << "OnClick: Board position: " << clickedPosition << " X: " << debug_x << " Y : " << debug_y << endl;
+	//cout << "OnClick: Board position: " << clickedPosition << " X: " << debug_x << " Y : " << debug_y << endl;
 
 	PieceType clickedType = game.GetPiece(clickedPosition);
 
-	// Debug
-	if (clickedType != EMPTY)
-
-	if (selectedPosition != -1)
-		cout << "Selected position is: " << selectedPosition << endl;
-	// /Debug
 	if (selectedPosition == -1 && clickedType <= 0)
 	{
 		return;
 	}
 	else if (selectedPosition == -1 && clickedType > 0)
 	{
-		cout << "Selected was NULL, selecting: " << clickedPosition << endl;
+		//cout << "Selected was NULL, selecting: " << clickedPosition << endl;
 		selectedPosition = clickedPosition;
 		return;
 	}
 	else if (selectedPosition == clickedPosition)
 	{
-		cout << "Canceling selection" << endl;
+		//cout << "Canceling selection" << endl;
 		selectedPosition = -1;
 		return;
 	} 
@@ -108,7 +96,7 @@ void BoardInterface::OnClick(int x, int y)
 	}
 	else
 	{
-		cout << "Trying to move from: " << selectedPosition << " to: " << clickedPosition << endl;
+		//cout << "Trying to move from: " << selectedPosition << " to: " << clickedPosition << endl;
 		Move move(selectedPosition, clickedPosition);
 
 		game.TryMakeMove(move);
@@ -297,8 +285,6 @@ int BoardInterface::ScreenToBoard(int x, int y)
 
 void BoardInterface::LoadTextures()
 {
-	std::cout << "Loading Textures" << std::endl;
-
 	if (!(
 		tx_boardTexture.loadFromFile("img/board.png") &&
 		tx_highlightlast.loadFromFile("img/highlightlast.png") &&
