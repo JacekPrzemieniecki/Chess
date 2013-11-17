@@ -131,7 +131,10 @@ castleRights({
 	{
 		int epFile = positionString[cursor] - 'a';
 		int epRank = 8 - (positionString[cursor + 1] - '0');
-		enPassant = epRank * 16 + epFile;
+		enPassant = epRank * 16 + epFile; 
+		Move fakeMove(enPassant + 16, enPassant - 16);
+		moveHistory.push_back(fakeMove);
+		fakeMove.isEnPassant = true;
 		cursor += 3;
 	}
 	
