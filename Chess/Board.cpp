@@ -243,7 +243,8 @@ void Board::MakeMove(Move move)
 		Place(EMPTY, move.castleInfo->rockFrom);
 	}
 
-	if (move.to == enPassant)
+	PieceType movingPiece = board[move.from];
+	if (move.to == enPassant && (movingPiece == W_PAWN || movingPiece == B_PAWN))
 	{
 		move.isEnPassant = true;
 		int epPawnPosition = move.to + 16 * (whiteToMove ? 1 : -1);
@@ -328,16 +329,7 @@ void Board::UndoMove()
 
 void Board::Print()
 {
-	cout << "Move history: " << endl;
-	for (Move m : moveHistory)
-	{
-		cout << "From: " << m.from << " to: " << m.to << endl <<
-			"captured: " << m.capturedPiece << endl;
-		if (m.castleInfo != NULL)
-		{
-			cout << "Move was a castle " << m.castleInfo->type << endl;
-		}
-	}
+	cout << "Board:" << endl;
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -346,4 +338,17 @@ void Board::Print()
 		}
 		cout << endl;
 	}
+	cout << "enPassant position: " << enPassant << endl;
+	cout << "Move history: " << endl;
+	for (Move m : moveHistory)
+	{
+		cout << "From: " << m.from << " to: " << m.to << endl <<
+			"captured: " << m.capturedPiece << endl <<
+			"is enPassant: " << m.isEnPassant << endl << "--" << endl;
+		if (m.castleInfo != NULL)
+		{
+			cout << "Move was a castle " << m.castleInfo->type << endl;
+		}
+	}
+
 }
