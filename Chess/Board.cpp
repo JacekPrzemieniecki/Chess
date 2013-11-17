@@ -244,9 +244,7 @@ void Board::MakeMove(Move move)
 	{
 		move.isEnPassant = true;
 		int epPawnPosition = move.to + 16 * (whiteToMove ? 1 : -1);
-		cout << "enPassant capture " << epPawnPosition << endl;
 		Place(EMPTY, epPawnPosition);
-		Print();
 	}
 
 	if (move.isPawnDoublePush)
