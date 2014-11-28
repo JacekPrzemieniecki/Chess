@@ -14,6 +14,7 @@ public:
     PieceType GetPiece(int position);
 	std::set<int>& GetWhitePieces();
 	std::set<int>& GetBlackPieces();
+    bool MoveWasMade();
 	Move& GetLastMove();
 
     bool dirty = false;

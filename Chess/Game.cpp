@@ -27,6 +27,11 @@ set<int>& Game::GetBlackPieces()
 	return board.blackPieces;
 }
 
+bool Game::MoveWasMade()
+{
+    return board.MoveCount() > 0;
+}
+
 Move& Game::GetLastMove()
 {
 	return board.GetLastMove();

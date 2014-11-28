@@ -103,9 +103,9 @@ void BoardInterface::Draw()
     }
 
     // Draw last move if we are not at move 0
-    Move lastMove = game.GetLastMove();
-    if (lastMove.from != -1)
-	{
+    if (game.MoveWasMade())
+    {
+        Move lastMove = game.GetLastMove();
         int fromX, fromY, toX, toY;
         BoardToScreen(lastMove.from, fromX, fromY);
         BoardToScreen(lastMove.to, toX, toY);

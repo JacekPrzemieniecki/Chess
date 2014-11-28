@@ -19,6 +19,7 @@ public:
 	void MakeMove(Move);
 	void UndoMove();
 	void Print();
+    int MoveCount();
 
 	// fields
 	std::array<PieceType, 128> board;

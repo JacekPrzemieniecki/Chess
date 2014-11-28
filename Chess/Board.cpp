@@ -31,7 +31,7 @@ kingDead(false)
     castleRights[W_QUEEN] = INT_MAX;
     castleRights[B_KING] = INT_MAX;
     castleRights[B_QUEEN] = INT_MAX;
-    
+
     Place(W_ROCK, 0, 7);
     Place(W_ROCK, 7, 7);
     Place(W_KNIGHT, 1, 7);
@@ -153,12 +153,14 @@ kingDead(false)
 
 PieceType Board::operator[](int index)
 {
+#if DEBUG
     if (index & 0x88)
     {
         cout << "Debug: trying to access illegal position: " << index << endl;
         Print();
         throw exception();
     }
+#endif
     return board[index];
 }
 
@@ -212,14 +214,7 @@ void Board::Place(PieceType type, int position)
 
 Move& Board::GetLastMove()
 {
-    if (moveHistory.size() > 0)
-    {
-        return moveHistory.front();
-    }
-    else
-    {
-        return Move();
-    }
+    return moveHistory.front();
 }
 
 void Board::MakeMove(Move move)
@@ -358,4 +353,9 @@ void Board::Print()
         }
     }
 
+}
+
+int Board::MoveCount()
+{
+    return moveHistory.size();
 }
