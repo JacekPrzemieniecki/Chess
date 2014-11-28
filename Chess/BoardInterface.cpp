@@ -23,8 +23,6 @@ window(_window),
 game()
 {
 	sf::Vector2u size = window.getSize();
-	screenW = size.x;
-	screenH = size.y;
 	tileSize = (min(size.x, size.y) - 2 * border) / 8;
     spriteSet.Init();
 }
@@ -113,14 +111,36 @@ void BoardInterface::Draw()
         game.Refresh();
     }
 
-	if (game.GetLastMove().from != -1)
+    // Draw last move if we are not at move 0
+    Move lastMove = game.GetLastMove();
+    if (lastMove.from != -1)
 	{
-		DrawLastMove(game.GetLastMove());
+        int fromX, fromY, toX, toY;
+        BoardToScreen(lastMove.from, fromX, fromY);
+        BoardToScreen(lastMove.to, toX, toY);
+        spriteSet.highlightLastFrom.setPosition((float)fromX, (float)fromY);
+        spriteSet.highlightLastTo.setPosition((float)toX, (float)toY);
+        window.draw(spriteSet.highlightLastFrom);
+        window.draw(spriteSet.highlightLastTo);
 	}
 
+    // Draw move suggestion if a piece was selected
 	if (selectedPosition != -1)
 	{
-		DrawMoveSuggestion();
+        sf::Vector2i position = sf::Mouse::getPosition(window);
+        int mouseX = position.x - (position.x - border) % tileSize;
+        int mouseY = position.y - (position.y - border) % tileSize;
+        if (border <= position.x && position.x < window.getSize().x - border && border <= position.y && position.y < window.getSize().y - border)
+        {
+            spriteSet.highlightMoveSuggestion.setPosition((float)mouseX, (float)mouseY);
+            window.draw(spriteSet.highlightMoveSuggestion);
+        }
+
+        int selectedX, selectedY;
+        BoardToScreen(selectedPosition, selectedX, selectedY);
+        spriteSet.highlightPiece.setPosition((float)selectedX, (float)selectedY);
+
+        window.draw(spriteSet.highlightPiece);
 	}
 
 	set<int> whitePieces = game.GetWhitePieces();
@@ -154,35 +174,6 @@ void BoardInterface::DrawPiece(PieceType type, int boardPosition)
 	sf::Sprite sprite = spriteSet.GetSprite(type);
 	sprite.setPosition((float)(pieceX + delta), (float)(pieceY + delta));
 	window.draw(sprite);
-}
-
-void BoardInterface::DrawMoveSuggestion()
-{
-	sf::Vector2i position = sf::Mouse::getPosition(window);
-	int mouseX = position.x - (position.x - border) % tileSize;
-	int mouseY = position.y - (position.y - border) % tileSize;
-	if (border <= position.x && position.x < screenW - border && border <= position.y && position.y < screenH - border)
-	{
-        spriteSet.highlightMoveSuggestion.setPosition((float)mouseX, (float)mouseY);
-        window.draw(spriteSet.highlightMoveSuggestion);
-	}
-
-	int selectedX, selectedY;
-	BoardToScreen(selectedPosition, selectedX, selectedY);
-    spriteSet.highlightPiece.setPosition((float)selectedX, (float)selectedY);
-
-    window.draw(spriteSet.highlightPiece);
-}
-
-void BoardInterface::DrawLastMove(Move& move)
-{
-	int fromX, fromY, toX, toY;
-	BoardToScreen(move.from, fromX, fromY);
-	BoardToScreen(move.to, toX, toY);
-    spriteSet.highlightLastFrom.setPosition((float)fromX, (float)fromY);
-    spriteSet.highlightLastTo.setPosition((float)toX, (float)toY);
-    window.draw(spriteSet.highlightLastFrom);
-    window.draw(spriteSet.highlightLastTo);
 }
 
 void BoardInterface::BoardToScreen(int boardPosition, int& x, int& y)

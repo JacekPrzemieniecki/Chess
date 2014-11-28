@@ -18,16 +18,12 @@ public:
 	void Undo();
 private:
 	void BoardInterface::DrawPiece(PieceType type, int boardPosition);
-	void DrawLastMove(Move& move);
-	void DrawMoveSuggestion();
 	int ScreenToBoard(int screenX, int screenY);
 	void BoardToScreen(int board, int& x, int& y);
 
 	Game game;
 	int tileSize;
 	static const int border = 50;
-	int screenW;
-	int screenH;
 	int selectedPosition = -1;
 	bool pendingPromote = false;
 	int promoteTo;
