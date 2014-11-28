@@ -1,8 +1,9 @@
 #pragma once
+#include <set>
 
 #include "Board.h"
 #include "Move.h"
-#include <set>
+#include "AIPlayer.h"
 
 class Game
 {
@@ -18,8 +19,9 @@ public:
 	Move& GetLastMove();
 
     bool dirty = false;
-    Move AwaitingAIMove;
+    Move awaitingAIMove;
 
 	bool gameOver = false;
 	Board board;
+    AIPlayer aiPlayer;
 };

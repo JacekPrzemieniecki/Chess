@@ -66,7 +66,7 @@ void Game::TryMakeMove(Move& move)
 
 	if (!board.whiteToMove)
 	{
-		thread t(AIPlayer::MakeMove, this);
+		thread t(&AIPlayer::MakeMove, aiPlayer, board, &dirty, &awaitingAIMove);
 		t.detach();
 	}
 	
@@ -74,6 +74,6 @@ void Game::TryMakeMove(Move& move)
 
 void Game::Refresh()
 {
-    TryMakeMove(AwaitingAIMove);
+    TryMakeMove(awaitingAIMove);
     dirty = false;
 }

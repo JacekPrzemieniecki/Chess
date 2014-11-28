@@ -1,8 +1,11 @@
 #pragma once
+#include "Move.h"
+#include "Board.h"
 
 class Game;
 
-namespace AIPlayer
+class AIPlayer
 {
-	void MakeMove(Game* game);
-}
+public:
+    void MakeMove(Board board, bool* doneFlag, Move* result);
+};
