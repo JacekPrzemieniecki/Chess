@@ -6,7 +6,6 @@ class PromoteWindow
 {
 public:
 	PromoteWindow();
-	~PromoteWindow();
 	void Draw(sf::RenderWindow& window, float posX);
 	PieceType OnClick(int x, int y);
 private:

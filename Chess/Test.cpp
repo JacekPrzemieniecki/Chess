@@ -13,7 +13,7 @@ string positionToString(int pos)
 	return res;
 }
 
-int countPossibilities(Board& b, int depth, bool printPartial = false, bool special = false)
+int countPossibilities(Board& b, int depth, bool printPartial = false)
 {
 	int poss = 0;
 	vector<Move*> possibleMoves;

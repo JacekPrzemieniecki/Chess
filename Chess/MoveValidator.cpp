@@ -22,9 +22,9 @@ int rayCast(Board& board, int from, int to, int delta)
 vector<int> rayCastAll(Board& board, int from, vector<int> deltas)
 {
 	vector<int> results;
-	for (vector<int>::iterator it = deltas.begin(); it != deltas.end(); it++)
+	for (int delta : deltas)
 	{
-		int cast = rayCast(board, from, 9, *it);
+		int cast = rayCast(board, from, 9, delta);
 		if (cast & 0x88) continue;
 		results.push_back(cast);
 	}
@@ -34,9 +34,9 @@ vector<int> rayCastAll(Board& board, int from, vector<int> deltas)
 bool KnightMove(int from, int to)
 {
 	int diff = abs(to - from);
-	for (vector<int>::iterator it = knightTab.begin(); it != knightTab.end(); it++)
+	for (int delta : knightTab)
 	{
-		if (*it == diff)
+		if (delta == diff)
 		{
 			return true;
 		}
@@ -176,6 +176,8 @@ bool ValidateMove(Board& board, Move& move)
 		return PawnMove(board, move, false);
 	case W_PAWN:
 		return PawnMove(board, move, true);
+	case EMPTY: break;
+	default: break;
 	}
 	return true;
 }
@@ -184,9 +186,9 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 {
 	//cout << "Checking if position: " << position << " is attacked " << (byBlack ? "by Black" : "by White") << endl;
 	int sign = byBlack ? -1 : 1;
-	for (vector<int>::iterator it = knightTab.begin(); it != knightTab.end(); it++)
+	for (int delta : knightTab)
 	{
-		int target = position + *it;
+		int target = position + delta;
 		if (!(target & 0x88) && board[target] == W_KNIGHT * sign)
 		{
 			//cout << "It is - by a knight" << endl;

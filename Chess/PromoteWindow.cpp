@@ -1,6 +1,5 @@
 #include "PromoteWindow.h"
 
-
 PromoteWindow::PromoteWindow()
 {
 	tx_window.loadFromFile("img/PromoteWindow.png");
@@ -8,16 +7,10 @@ PromoteWindow::PromoteWindow()
 
 }
 
-
-PromoteWindow::~PromoteWindow()
-{
-}
-
-
 void PromoteWindow::Draw(sf::RenderWindow& window, float posX)
 {
 	sf::Vector2u windowSize = window.getSize();
-	float sizeX = (float)windowSize.x;
+	float sizeX = static_cast<float>(windowSize.x);
 	if (posX > sizeX + pWindowW / 2)
 	{
 		windowPosX = sizeX - pWindowW;
@@ -42,5 +35,5 @@ PieceType PromoteWindow::OnClick(int x, int y)
 	{
 		return EMPTY;
 	}
-	return (PieceType)(((x - (int)windowPosX) / 85) + 2);
+	return static_cast<PieceType>(((x - (int)windowPosX) / 85) + 2);
 }

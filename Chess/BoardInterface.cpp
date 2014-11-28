@@ -14,13 +14,13 @@ void BoardInterface::DrawGizmo(int x, int y)
 {
 	static sf::CircleShape shape(25);
 	shape.setFillColor(sf::Color(100, 250, 50));
-	shape.setPosition((float)x, (float)y);
+	shape.setPosition(static_cast<float>(x), static_cast<float>(y));
 	window.draw(shape);
 }
 
 BoardInterface::BoardInterface(sf::RenderWindow& _window) :
-window(_window),
-game()
+game(),
+window(_window)
 {
 	sf::Vector2u size = window.getSize();
 	tileSize = (min(size.x, size.y) - 2 * border) / 8;
@@ -60,46 +60,37 @@ void BoardInterface::OnClick(int x, int y)
 	if (clickedPosition & 0x88)
 		return; // clicked outside of the board
 
-	// Debug
-	//cout << "PieceType " << sizeof(PieceType) << endl;
-	//cout << "Piece " << sizeof(Piece) << endl;
-	int debug_x = (x - border) / tileSize;
-	int debug_y = (y - border) / tileSize;
-	// /Debug
-
-	//cout << "OnClick: Board position: " << clickedPosition << " X: " << debug_x << " Y : " << debug_y << endl;
-
 	PieceType clickedType = game.GetPiece(clickedPosition);
 
 	if (selectedPosition == -1 && clickedType <= 0)
 	{
 		return;
 	}
-	else if (selectedPosition == -1 && clickedType > 0)
-	{
-		//cout << "Selected was NULL, selecting: " << clickedPosition << endl;
-		selectedPosition = clickedPosition;
-		return;
-	}
-	else if (selectedPosition == clickedPosition)
-	{
-		//cout << "Canceling selection" << endl;
-		selectedPosition = -1;
-		return;
-	} 
-	else if (game.GetPiece(selectedPosition) == W_PAWN && clickedPosition / 16 == 0)
-	{
-		pendingPromote = true;
-		promoteTo = clickedPosition;
-	}
-	else
-	{
-		//cout << "Trying to move from: " << selectedPosition << " to: " << clickedPosition << endl;
-		Move move(selectedPosition, clickedPosition);
+    if (selectedPosition == -1 && clickedType > 0)
+    {
+        //cout << "Selected was NULL, selecting: " << clickedPosition << endl;
+        selectedPosition = clickedPosition;
+        return;
+    }
+    if (selectedPosition == clickedPosition)
+    {
+        //cout << "Canceling selection" << endl;
+        selectedPosition = -1;
+        return;
+    }
+    if (game.GetPiece(selectedPosition) == W_PAWN && clickedPosition / 16 == 0)
+    {
+        pendingPromote = true;
+        promoteTo = clickedPosition;
+    }
+    else
+    {
+        //cout << "Trying to move from: " << selectedPosition << " to: " << clickedPosition << endl;
+        Move move(selectedPosition, clickedPosition);
 
-		game.TryMakeMove(move);
-		selectedPosition = -1;
-	}
+        game.TryMakeMove(move);
+        selectedPosition = -1;
+    }
 }
 
 void BoardInterface::Draw()
@@ -118,8 +109,8 @@ void BoardInterface::Draw()
         int fromX, fromY, toX, toY;
         BoardToScreen(lastMove.from, fromX, fromY);
         BoardToScreen(lastMove.to, toX, toY);
-        spriteSet.highlightLastFrom.setPosition((float)fromX, (float)fromY);
-        spriteSet.highlightLastTo.setPosition((float)toX, (float)toY);
+        spriteSet.highlightLastFrom.setPosition(static_cast<float>(fromX), static_cast<float>(fromY));
+        spriteSet.highlightLastTo.setPosition(static_cast<float>(toX), static_cast<float>(toY));
         window.draw(spriteSet.highlightLastFrom);
         window.draw(spriteSet.highlightLastTo);
 	}
@@ -132,13 +123,13 @@ void BoardInterface::Draw()
         int mouseY = position.y - (position.y - border) % tileSize;
         if (border <= position.x && position.x < window.getSize().x - border && border <= position.y && position.y < window.getSize().y - border)
         {
-            spriteSet.highlightMoveSuggestion.setPosition((float)mouseX, (float)mouseY);
+            spriteSet.highlightMoveSuggestion.setPosition(static_cast<float>(mouseX), static_cast<float>(mouseY));
             window.draw(spriteSet.highlightMoveSuggestion);
         }
 
         int selectedX, selectedY;
         BoardToScreen(selectedPosition, selectedX, selectedY);
-        spriteSet.highlightPiece.setPosition((float)selectedX, (float)selectedY);
+        spriteSet.highlightPiece.setPosition(static_cast<float>(selectedX), static_cast<float>(selectedY));
 
         window.draw(spriteSet.highlightPiece);
 	}
@@ -157,7 +148,7 @@ void BoardInterface::Draw()
 
 	if (pendingPromote)
 	{
-		promoteWindow.Draw(window, (float)(selectedPosition * tileSize) + 0.5f);
+		promoteWindow.Draw(window, static_cast<float>(selectedPosition * tileSize) + 0.5f);
 	}
 }
 
@@ -172,7 +163,7 @@ void BoardInterface::DrawPiece(PieceType type, int boardPosition)
 	BoardToScreen(boardPosition, pieceX, pieceY);
 
 	sf::Sprite sprite = spriteSet.GetSprite(type);
-	sprite.setPosition((float)(pieceX + delta), (float)(pieceY + delta));
+	sprite.setPosition(static_cast<float>(pieceX + delta), static_cast<float>(pieceY + delta));
 	window.draw(sprite);
 }
 

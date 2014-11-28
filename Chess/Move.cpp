@@ -11,10 +11,10 @@ to(-1)
 Move::Move(int _from, int _to) :
 from(_from),
 to(_to),
-castleInfo(NULL),
+castleInfo(nullptr),
 capturedPiece(EMPTY),
 promoteTo(EMPTY),
 enPassantPosition(-1),
-isEnPassant(false),
-isPawnDoublePush(false)
+isPawnDoublePush(false),
+isEnPassant(false)
 {}

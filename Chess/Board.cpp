@@ -22,9 +22,9 @@ unordered_map<char, PieceType> pieceChars{
 };
 
 Board::Board(void) :
-whiteToMove(true),
 enPassant(-1),
 turn(0),
+whiteToMove(true),
 kingDead(false)
 {
     castleRights[W_KING] = INT_MAX;
@@ -72,7 +72,6 @@ kingDead(false)
     while (positionString[cursor] != ' ')
     {
         int file = 0;
-        int deb = cursor;
         while (positionString[cursor] != '/')
         {
             char c = positionString[cursor];
@@ -90,7 +89,6 @@ kingDead(false)
             file++;
         }
         cursor++;
-        file = 0;
         rank++;
     }
     cursor++;
@@ -172,12 +170,12 @@ int Board::FindKing(bool white)
     }
     set<int>& tab = white ? whitePieces : blackPieces;
     PieceType lookingFor = white ? W_KING : B_KING;
-    for (set<int>::iterator it = tab.begin(); it != tab.end(); it++)
+    for (int position : tab)
     {
-        if (board[*it] == lookingFor)
+        if (board[position] == lookingFor)
         {
             //cout << "Found king at " << *it << endl;
-            return *it;
+            return position;
         }
     }
     Print();
@@ -212,7 +210,7 @@ void Board::Place(PieceType type, int position)
     }
 }
 
-Move Board::GetLastMove()
+Move& Board::GetLastMove()
 {
     if (moveHistory.size() > 0)
     {

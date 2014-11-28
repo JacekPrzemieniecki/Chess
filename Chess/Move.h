@@ -9,7 +9,7 @@ public:
 	short int from;
 	short int to;
 
-	castleMoves* castleInfo = NULL;
+	castleMoves* castleInfo = nullptr;
 
 	PieceType capturedPiece;
 	PieceType promoteTo = EMPTY;

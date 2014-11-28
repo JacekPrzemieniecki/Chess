@@ -15,7 +15,7 @@ public:
 	Board(string position);
 	int FindKing(bool white);
 	PieceType operator[](int index);
-	Move GetLastMove();
+	Move& GetLastMove();
 	void MakeMove(Move);
 	void UndoMove();
 	void Print();

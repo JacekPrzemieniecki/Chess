@@ -7,9 +7,9 @@ using namespace std;
 
 void KnightOrKingMove(int position, Board& board, vector<Move*>& result, vector<int>& tab)
 {
-	for (vector<int>::iterator it = tab.begin(); it != tab.end(); it++)
+	for (int delta : tab)
 	{
-		char target = position + *it;
+		char target = position + delta;
 		if (target & 0x88) continue; // target position out of board
 		if (board[target] * board[position] > 0) continue; // attacking own piece is invalid
 		result.push_back(new Move(position, target));
@@ -50,9 +50,9 @@ void GenerateOnRay(int start, int current, Board& board, vector<Move*>& result, 
 
 void BishopOrRockMove(int position, Board& board, vector<Move*>& result, vector<int>& tab)
 {
-	for (vector<int>::iterator it = tab.begin(); it != tab.end(); it++)
+	for (int delta : tab)
 	{
-		GenerateOnRay(position, position + *it, board, result, *it);
+		GenerateOnRay(position, position + delta, board, result, delta);
 	}
 }
 
@@ -63,10 +63,10 @@ void CheckForPromoteAndAdd(int position, int to, vector<Move*>& result, bool isW
 	int rank = to / 16;
 	if (rank == 0 || rank == 7)
 	{
-		for (vector<PieceType>::iterator it = promoteTab.begin(); it != promoteTab.end(); it++)
+		for (PieceType promotePiece : promoteTab)
 		{
 			Move* move = new Move(position, to);
-			move->promoteTo = (isWhite ? *it : (PieceType)-*it);
+			move->promoteTo = isWhite ? promotePiece : static_cast<PieceType>(-promotePiece);
 			result.push_back(move);
 		}
 	}
@@ -138,6 +138,8 @@ void Generate(int position, Board& board, vector<Move*>& result)
 	case W_PAWN:
 		PawnMove(position, board, result, true);
 		break;
+	case EMPTY: break;
+	default: break;
 	}
 }
 
@@ -158,10 +160,10 @@ bool IsMovePossible(Board& board)
 	bool possible = false;
 	GenerateAll(board, possibleMoves);
 	//cout << "Found " << possibleMoves.size() << " moves:" << endl;
-	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
+	for (Move* move : possibleMoves)
 	{
 		//cout << (*it)->from << "->" << (*it)->to << " ";
-		if (IsMoveLegal(board, **it))
+        if (IsMoveLegal(board, *move))
 		{
 			possible = true;
 			//cout << "legal" << endl;
@@ -169,9 +171,9 @@ bool IsMovePossible(Board& board)
 		}
 		//cout << "ill; ";
 	}
-	for (vector<Move*>::iterator it = possibleMoves.begin(); it != possibleMoves.end(); it++)
+	for (Move* move : possibleMoves)
 	{
-		delete *it;
+		delete move;
 	}
 
 	return possible;
