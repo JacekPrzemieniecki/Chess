@@ -1,9 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
+#include "Piece.h"
+
 struct SpriteSet
 {
     void Init();
+    sf::Sprite& GetSprite(PieceType piece);
 
     sf::Sprite boardTexture;
     sf::Sprite highlightLastFrom;

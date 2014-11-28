@@ -108,6 +108,11 @@ void BoardInterface::Draw()
 {
     window.draw(spriteSet.boardTexture);
 
+    if (game.dirty)
+    {
+        game.Refresh();
+    }
+
 	if (game.GetLastMove().from != -1)
 	{
 		DrawLastMove(game.GetLastMove());
@@ -146,49 +151,7 @@ void BoardInterface::DrawPiece(PieceType type, int boardPosition)
 	int pieceY;
 	BoardToScreen(boardPosition, pieceX, pieceY);
 
-	sf::Sprite sprite;
-	switch (type)
-	{
-	case B_BISHOP:
-		sprite = spriteSet.bbishop;
-		break;
-	case B_KING:
-        sprite = spriteSet.bking;
-		break;
-	case B_KNIGHT:
-        sprite = spriteSet.bknight;
-		break;
-	case B_PAWN:
-        sprite = spriteSet.bpawn;
-		break;
-	case B_QUEEN:
-        sprite = spriteSet.bqueen;
-		break;
-	case B_ROCK:
-        sprite = spriteSet.brock;
-		break;
-	case W_BISHOP:
-        sprite = spriteSet.wbishop;
-		break;
-	case W_KING:
-        sprite = spriteSet.wking;
-		break;
-	case W_KNIGHT:
-        sprite = spriteSet.wknight;
-		break;
-	case W_PAWN:
-        sprite = spriteSet.wpawn;
-		break;
-	case W_QUEEN:
-        sprite = spriteSet.wqueen;
-		break;
-	case W_ROCK:
-        sprite = spriteSet.wrock;
-		break;
-	default:
-		break;
-	}
-
+	sf::Sprite sprite = spriteSet.GetSprite(type);
 	sprite.setPosition((float)(pieceX + delta), (float)(pieceY + delta));
 	window.draw(sprite);
 }

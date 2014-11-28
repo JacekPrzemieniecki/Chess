@@ -110,9 +110,9 @@ namespace AIPlayer
 		return returnVal;
 	}
 
-	void MakeMove(Game& game)
+	void MakeMove(Game* game)
 	{
-		Board board = game.board;
+		Board board = game->board;
 		vector<Move*> possibleMoves;
 		possibleMoves.reserve(100);
 		GenerateAll(board, possibleMoves);
@@ -145,6 +145,7 @@ namespace AIPlayer
 		{
 			delete move;
 		}
-		game.TryMakeMove(chosenMove);
+        game->AwaitingAIMove = chosenMove;
+        game->dirty = true;
 	}
 }

@@ -46,3 +46,37 @@
     brock.setTexture(tx_brock);
     bpawn.setTexture(tx_bpawn);
 }
+
+
+ sf::Sprite& SpriteSet::GetSprite(PieceType piece)
+ {
+     switch (piece)
+     {
+     case B_BISHOP:
+         return bbishop;
+     case B_KING:
+         return bking;
+     case B_KNIGHT:
+         return bknight;
+     case B_PAWN:
+         return bpawn;
+     case B_QUEEN:
+         return bqueen;
+     case B_ROCK:
+         return brock;
+     case W_BISHOP:
+         return wbishop;
+     case W_KING:
+         return wking;
+     case W_KNIGHT:
+         return wknight;
+     case W_PAWN:
+         return wpawn;
+     case W_QUEEN:
+         return wqueen;
+     case W_ROCK:
+         return wrock;
+     default:
+         break;
+     }
+ }

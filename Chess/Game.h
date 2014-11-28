@@ -10,10 +10,14 @@ public:
 	Game();
 	void TryMakeMove(Move& move);
 	void Undo();
-	PieceType GetPiece(int position);
+    void Refresh();
+    PieceType GetPiece(int position);
 	std::set<int>& GetWhitePieces();
 	std::set<int>& GetBlackPieces();
 	Move& GetLastMove();
+
+    bool dirty = false;
+    Move AwaitingAIMove;
 
 	bool gameOver = false;
 	Board board;

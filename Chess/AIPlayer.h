@@ -4,5 +4,5 @@ class Game;
 
 namespace AIPlayer
 {
-	void MakeMove(Game& game);
+	void MakeMove(Game* game);
 }

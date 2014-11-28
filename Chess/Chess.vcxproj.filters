@@ -19,6 +19,12 @@
     <Filter Include="Source Files\AI">
       <UniqueIdentifier>{0b236c2c-168d-4fb3-b9c6-95ffc0a4ed97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\AI">
+      <UniqueIdentifier>{8f4cd9ef-6890-4fcd-a529-555034efb900}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Interface">
+      <UniqueIdentifier>{d364620c-e0ee-4231-be12-5722a531dd36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -52,13 +58,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpriteSet.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Interface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BoardInterface.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Piece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -71,26 +74,29 @@
     <ClInclude Include="Move.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MoveGenerator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MoveValidator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AIPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PieceMoves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PromoteWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AIPlayer.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="MoveGenerator.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="BoardInterface.h">
+      <Filter>Header Files\Interface</Filter>
+    </ClInclude>
     <ClInclude Include="SpriteSet.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="PromoteWindow.h">
+      <Filter>Header Files\Interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
