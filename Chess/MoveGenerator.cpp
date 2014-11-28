@@ -141,7 +141,7 @@ void Generate(int position, Board& board, vector<Move>& result)
 
 void GenerateAll(Board& board, vector<Move>& result)
 {
-	set<int> pieces = board.whiteToMove ? board.whitePieces : board.blackPieces;
+	vector<int>& pieces = board.whiteToMove ? board.whitePieces : board.blackPieces;
 	for (int i : pieces)
 	{
 		Generate(i, board, result);

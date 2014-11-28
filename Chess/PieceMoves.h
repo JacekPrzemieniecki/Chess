@@ -2,8 +2,6 @@
 #include "Piece.h"
 #include <vector>
 
-using namespace std;
-
 struct castleMoves
 {
 	PieceType type;
@@ -22,7 +20,7 @@ static const castleMoves bQueenCastle	{ B_QUEEN, B_ROCK, 4, 2, 0, 3, -1 };
 
 static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
 
-static vector<int> knightTab = { -33, -31, -18, -14, 33, 31, 18, 14 };
-static vector<int> kingTab = { -1, -15, -16, -17, 1, 15, 16, 17 };
-static vector<int> bishopTab = { -15, -17, 15, 17 };
-static vector<int> rockTab = { -1, -16, 1, 16 };
+static std::vector<int> knightTab = { -33, -31, -18, -14, 33, 31, 18, 14 };
+static std::vector<int> kingTab = { -1, -15, -16, -17, 1, 15, 16, 17 };
+static std::vector<int> bishopTab = { -15, -17, 15, 17 };
+static std::vector<int> rockTab = { -1, -16, 1, 16 };

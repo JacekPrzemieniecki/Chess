@@ -2,7 +2,7 @@
 #include "Move.h"
 #include "Piece.h"
 #include <string>
-#include <set>
+#include <vector>
 #include <unordered_map>
 #include <list>
 #include <array>
@@ -12,7 +12,7 @@ class Board
 public:
 	// methods
 	Board(void);
-	Board(string position);
+	Board(std::string position);
 	int FindKing(bool white);
 	PieceType operator[](int index);
 	Move& GetLastMove();
@@ -23,8 +23,8 @@ public:
 
 	// fields
 	std::array<PieceType, 128> board;
-	std::set<int> whitePieces;
-	std::set<int> blackPieces;
+	std::vector<int> whitePieces;
+	std::vector<int> blackPieces;
 	int enPassant;
 	int turn;
 	bool whiteToMove;

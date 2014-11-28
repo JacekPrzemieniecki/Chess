@@ -170,7 +170,7 @@ int Board::FindKing(bool white)
     {
         return -1;
     }
-    set<int>& tab = white ? whitePieces : blackPieces;
+    vector<int>& tab = white ? whitePieces : blackPieces;
     PieceType lookingFor = white ? W_KING : B_KING;
     for (int position : tab)
     {
@@ -189,26 +189,48 @@ void Board::Place(PieceType type, int x, int y)
     Place(type, x + 16 * y);
 }
 
-void Board::Place(PieceType type, int position)
+void Board::Place(const PieceType type, int position)
 {
     //cout << "Placing piece: " << type << " On position: " << position << endl;
+
+    // Remove the piece that was previously there
     if (board[position] > 0)
     {
-        whitePieces.erase(position);
+        for (auto it = whitePieces.begin(); it != whitePieces.end(); ++it)
+        {
+            if (*it == position)
+            {
+                whitePieces.erase(it);
+                break;
+            }
+        }
     }
     else if (board[position] < 0)
     {
-        blackPieces.erase(position);
+        for (auto it = blackPieces.begin(); it != blackPieces.end(); ++it)
+        {
+            if (*it == position)
+            {
+                blackPieces.erase(it);
+                break;
+            }
+        }
     }
 
+    // Place the new piece
     board[position] = type;
     if (type > 0)
     {
-        whitePieces.insert(position);
+        whitePieces.push_back(position);
     }
     else if (type < 0)
     {
-        blackPieces.insert(position);
+        blackPieces.push_back(position);
+    }
+
+    if (whitePieces.size() > 17 || blackPieces.size() > 17)
+    {
+        int a = 0;
     }
 }
 
@@ -279,10 +301,7 @@ void Board::MakeMove(Move move)
 
 void Board::UndoMove()
 {
-    if (moveHistory.size() == 0)
-        throw exception();
     Move lastMove = moveHistory.front();
-    //cout << "Undoing move from " << last_move.from << " to: " << last_move.to << endl;
     whiteToMove = !whiteToMove;
     turn--;
     kingDead = false;
@@ -324,7 +343,7 @@ void Board::UndoMove()
     moveHistory.pop_front();
     if (moveHistory.size() != 0)
     {
-        Move& previousMove = moveHistory.front();
+        Move previousMove = moveHistory.front();
         enPassant = previousMove.isPawnDoublePush ? (previousMove.from + previousMove.to) / 2 : -1;
     }
 }

@@ -134,13 +134,13 @@ void BoardInterface::Draw()
         window.draw(spriteSet.highlightPiece);
 	}
 
-	set<int> whitePieces = game.GetWhitePieces();
+	vector<int>& whitePieces = game.GetWhitePieces();
 	for (int pos: whitePieces)
 	{
 		DrawPiece(game.GetPiece(pos), pos);
 	}
 
-	set<int> blackPieces = game.GetBlackPieces();
+	vector<int>& blackPieces = game.GetBlackPieces();
 	for (int pos : blackPieces)
 	{
 		DrawPiece(game.GetPiece(pos), pos);

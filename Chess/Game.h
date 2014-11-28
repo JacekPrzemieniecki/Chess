@@ -1,5 +1,5 @@
 #pragma once
-#include <set>
+#include <vector>
 
 #include "Board.h"
 #include "Move.h"
@@ -13,8 +13,8 @@ public:
 	void Undo();
     void Refresh();
     PieceType GetPiece(int position);
-	std::set<int>& GetWhitePieces();
-	std::set<int>& GetBlackPieces();
+	std::vector<int>& GetWhitePieces();
+	std::vector<int>& GetBlackPieces();
     bool MoveWasMade();
 	Move& GetLastMove();
 

@@ -17,12 +17,12 @@ PieceType Game::GetPiece(int position)
 	return board[position];
 }
 
-set<int>& Game::GetWhitePieces()
+vector<int>& Game::GetWhitePieces()
 {
 	return board.whitePieces;
 }
 
-set<int>& Game::GetBlackPieces()
+vector<int>& Game::GetBlackPieces()
 {
 	return board.blackPieces;
 }
