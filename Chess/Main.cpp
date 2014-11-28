@@ -23,7 +23,7 @@ void sizes()
 
 int main()
 {
-	//test();
+	test();
 	//sizes();
 	sf::RenderWindow window(sf::VideoMode(700, 700), "Chess", sf::Style::Close);
 	window.setFramerateLimit(30);

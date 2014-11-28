@@ -206,26 +206,27 @@ bool IsAttacked(Board& board, int position, bool byBlack)
 		}
 	}
 
-	vector<int> bishopCasts = rayCastAll(board, position, bishopTab);
+    for (int delta : bishopTab)
+    {
+        int cast = rayCast(board, position, 9, delta);
+        if (cast & 0x88) continue;
+        if (board[cast] == W_BISHOP * sign || board[cast] == W_QUEEN * sign)
+        {
+            //cout << "It is - by a bishop" << endl;
+            return true;
+        }
+    }
 
-	for (vector<int>::iterator it = bishopCasts.begin(); it != bishopCasts.end(); it++)
-	{
-		if (board[*it] == W_BISHOP * sign || board[*it] == W_QUEEN * sign)
-		{
-			//cout << "It is - by a bishop" << endl;
-			return true;
-		}
-	}
-
-	vector<int> rockCasts = rayCastAll(board, position, rockTab);
-	for (vector<int>::iterator it = rockCasts.begin(); it != rockCasts.end(); it++)
-	{
-		if (board[*it] == W_ROCK * sign || board[*it] == W_QUEEN * sign)
-		{
-			//cout << "It is - by a rock" << endl;
-			return true;
-		}
-	}
+    for (int delta : rockTab)
+    {
+        int cast = rayCast(board, position, 9, delta);
+        if (cast & 0x88) continue;
+        if (board[cast] == W_ROCK * sign || board[cast] == W_QUEEN * sign)
+        {
+            //cout << "It is - by a bishop" << endl;
+            return true;
+        }
+    }
 
 	int attack_left = position + (15 * sign);
 	int attack_right = position + (17 * sign);
