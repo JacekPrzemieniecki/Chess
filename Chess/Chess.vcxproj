@@ -79,6 +79,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Move.cpp" />
+    <ClCompile Include="MoveFrameStack.cpp" />
     <ClCompile Include="MoveGenerator.cpp" />
     <ClCompile Include="MoveValidator.cpp" />
     <ClCompile Include="PromoteWindow.cpp" />
@@ -91,6 +92,7 @@
     <ClInclude Include="BoardInterface.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Move.h" />
+    <ClInclude Include="MoveFrameStack.h" />
     <ClInclude Include="MoveGenerator.h" />
     <ClInclude Include="MoveValidator.h" />
     <ClInclude Include="Piece.h" />

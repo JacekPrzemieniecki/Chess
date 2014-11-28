@@ -2,8 +2,6 @@
 #include "Move.h"
 #include "Board.h"
 
-class Game;
-
 class AIPlayer
 {
 public:

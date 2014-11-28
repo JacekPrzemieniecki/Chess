@@ -5,42 +5,38 @@
 #include <iostream>
 using namespace std;
 
-void KnightOrKingMove(int position, Board& board, vector<Move*>& result, vector<int>& tab)
+void KnightOrKingMove(int position, Board& board, vector<Move>& result, vector<int>& tab)
 {
 	for (int delta : tab)
 	{
 		char target = position + delta;
 		if (target & 0x88) continue; // target position out of board
 		if (board[target] * board[position] > 0) continue; // attacking own piece is invalid
-		result.push_back(new Move(position, target));
+		result.push_back(Move(position, target));
 	}
 }
 
-void CastleMoves(int position, Board& board, vector<Move*>& result)
+void CastleMoves(int position, Board& board, vector<Move>& result)
 {
 	static castleMoves castleTables[] {wKingCastle, wQueenCastle, bKingCastle, bQueenCastle};
 	for (int i = 0; i < 4; i++)
 	{
 		castleMoves cInfo = castleTables[i];
 		if (cInfo.kingFrom != position || !board.castleRights[cInfo.type]) continue;
-		Move* new_move = new Move(cInfo.kingFrom, cInfo.kingTo);
-		if (ValidateCastle(board, *new_move))
+		Move new_move(cInfo.kingFrom, cInfo.kingTo);
+		if (ValidateCastle(board, new_move))
 		{
 			result.push_back(new_move);
-		}
-		else
-		{
-			delete new_move;
 		}
 	}
 }
 
-void GenerateOnRay(int start, int current, Board& board, vector<Move*>& result, int delta)
+void GenerateOnRay(int start, int current, Board& board, vector<Move>& result, int delta)
 {
 	// Attacking out of bonds and attacking own pieces is illegal.
 	if ((current & 0x88) || board[current] * board[start] > 0 ) return;
 	
-	result.push_back(new Move(start, current));
+	result.push_back(Move(start, current));
 
 	if (board[current] == EMPTY)
 	{
@@ -48,7 +44,7 @@ void GenerateOnRay(int start, int current, Board& board, vector<Move*>& result, 
 	}
 }
 
-void BishopOrRockMove(int position, Board& board, vector<Move*>& result, vector<int>& tab)
+void BishopOrRockMove(int position, Board& board, vector<Move>& result, vector<int>& tab)
 {
 	for (int delta : tab)
 	{
@@ -58,27 +54,27 @@ void BishopOrRockMove(int position, Board& board, vector<Move*>& result, vector<
 
 
 vector<PieceType> promoteTab = { W_ROCK, W_BISHOP, W_KNIGHT, W_QUEEN };
-void CheckForPromoteAndAdd(int position, int to, vector<Move*>& result, bool isWhite, bool isDoublePush)
+void CheckForPromoteAndAdd(int position, int to, vector<Move>& result, bool isWhite, bool isDoublePush)
 {
 	int rank = to / 16;
 	if (rank == 0 || rank == 7)
 	{
 		for (PieceType promotePiece : promoteTab)
 		{
-			Move* move = new Move(position, to);
-			move->promoteTo = isWhite ? promotePiece : static_cast<PieceType>(-promotePiece);
+			Move move(position, to);
+			move.promoteTo = isWhite ? promotePiece : static_cast<PieceType>(-promotePiece);
 			result.push_back(move);
 		}
 	}
 	else
 	{
-		Move* move = new Move(position, to);
-		move->isPawnDoublePush = isDoublePush;
+		Move move(position, to);
+		move.isPawnDoublePush = isDoublePush;
 		result.push_back(move);
 	}
 }
 
-void PawnMove(int position, Board& board, vector<Move*>& result, bool isWhite)
+void PawnMove(int position, Board& board, vector<Move>& result, bool isWhite)
 {
 	int direction = isWhite ? -1 : 1;
 	int forward = position + 16 * direction;
@@ -106,7 +102,7 @@ void PawnMove(int position, Board& board, vector<Move*>& result, bool isWhite)
 	}
 }
 
-void Generate(int position, Board& board, vector<Move*>& result)
+void Generate(int position, Board& board, vector<Move>& result)
 {
 	switch (board[position])
 	{
@@ -143,7 +139,7 @@ void Generate(int position, Board& board, vector<Move*>& result)
 	}
 }
 
-void GenerateAll(Board& board, vector<Move*>& result)
+void GenerateAll(Board& board, vector<Move>& result)
 {
 	set<int> pieces = board.whiteToMove ? board.whitePieces : board.blackPieces;
 	for (int i : pieces)
@@ -155,25 +151,21 @@ void GenerateAll(Board& board, vector<Move*>& result)
 bool IsMovePossible(Board& board)
 {
 	//cout << "Checking for possible moves" << endl;
-	vector<Move*> possibleMoves;
+	vector<Move> possibleMoves;
 	possibleMoves.reserve(100);
 	bool possible = false;
 	GenerateAll(board, possibleMoves);
 	//cout << "Found " << possibleMoves.size() << " moves:" << endl;
-	for (Move* move : possibleMoves)
+	for (Move move : possibleMoves)
 	{
 		//cout << (*it)->from << "->" << (*it)->to << " ";
-        if (IsMoveLegal(board, *move))
+        if (IsMoveLegal(board, move))
 		{
 			possible = true;
 			//cout << "legal" << endl;
 			break;
 		}
 		//cout << "ill; ";
-	}
-	for (Move* move : possibleMoves)
-	{
-		delete move;
 	}
 
 	return possible;

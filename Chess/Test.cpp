@@ -16,38 +16,36 @@ string positionToString(int pos)
 int countPossibilities(Board& b, int depth, bool printPartial = false)
 {
 	int poss = 0;
-	vector<Move*> possibleMoves;
+	vector<Move> possibleMoves;
 	possibleMoves.reserve(100);
 	GenerateAll(b, possibleMoves);
 	if (depth == 0)
 	{
-		for (Move* movePtr : possibleMoves)
+		for (Move move : possibleMoves)
 		{
-			if (IsMoveLegal(b, *movePtr))
+			if (IsMoveLegal(b, move))
 			{
 				poss++;
 			}
-			delete movePtr;
 		}
 	}
 	else
 	{
-		for (Move* movePtr : possibleMoves)
+		for (Move move : possibleMoves)
 		{
-			if (IsMoveLegal(b, *movePtr))
+			if (IsMoveLegal(b, move))
 			{
-				b.MakeMove(*movePtr);
+				b.MakeMove(move);
 				//cout << endl << "Move from " << movePtr->from << " to " << movePtr->to << endl;
 				//b.Print();
 				int possibilities = countPossibilities(b, depth - 1);
 				if (printPartial)
 				{
-					cout << "Partial perft after move " << positionToString(movePtr->from) << " to " << positionToString(movePtr->to) << " : " << possibilities << endl;
+					cout << "Partial perft after move " << positionToString(move.from) << " to " << positionToString(move.to) << " : " << possibilities << endl;
 				}
 				poss += possibilities;
 				b.UndoMove();
 			}
-			delete movePtr;
 		}
 	}
 	return poss;

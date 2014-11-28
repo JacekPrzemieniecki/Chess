@@ -12,8 +12,6 @@
 
 using namespace std;
 
-
-
 namespace AI
 {
     const int searchDepth = 4;
@@ -45,14 +43,10 @@ namespace AI
             value += pieceValues[board[piecePosition]];
         }
 
-        vector<Move*> possibleMoves;
+        vector<Move> possibleMoves;
         possibleMoves.reserve(100);
         GenerateAll(board, possibleMoves);
         value += possibleMoves.size();
-        for (Move* m : possibleMoves)
-        {
-            delete m;
-        }
 
         return maximizing ? value : -value;
     }
@@ -69,16 +63,16 @@ namespace AI
             return EvaluateBoard(board);
         }
 
-        vector<Move*> possibleMoves;
+        vector<Move> possibleMoves;
         possibleMoves.reserve(100);
         GenerateAll(board, possibleMoves);
 
         int returnVal;
         if (maximizing)
         {
-            for (Move* move : possibleMoves)
+            for (Move move : possibleMoves)
             {
-                board.MakeMove(*move);
+                board.MakeMove(move);
                 alpha = max(alpha, EvaluateMove(board, alpha, beta, depth - 1, false));
                 if (beta <= alpha)
                 {
@@ -91,9 +85,9 @@ namespace AI
         }
         else
         {
-            for (Move* move : possibleMoves)
+            for (Move move : possibleMoves)
             {
-                board.MakeMove(*move);
+                board.MakeMove(move);
                 beta = min(beta, EvaluateMove(board, alpha, beta, depth - 1, true));
                 if (beta <= alpha)
                 {
@@ -105,17 +99,13 @@ namespace AI
             returnVal = beta;
         }
 
-        for (Move* move : possibleMoves)
-        {
-            delete move;
-        }
         return returnVal;
     }
 }
 
 void AIPlayer::MakeMove(Board board, bool* doneFlag, Move* result)
 {
-    vector<Move*> possibleMoves;
+    vector<Move> possibleMoves;
     possibleMoves.reserve(100);
     GenerateAll(board, possibleMoves);
 
@@ -126,12 +116,12 @@ void AIPlayer::MakeMove(Board board, bool* doneFlag, Move* result)
     }
 
     int beta = 10001;
-    Move* best = possibleMoves[0];
-    for (Move* move : possibleMoves)
+    Move best = possibleMoves[0];
+    for (Move move : possibleMoves)
     {
-        if (!IsMoveLegal(board, *move))	continue;
+        if (!IsMoveLegal(board, move))	continue;
 
-        board.MakeMove(*move);
+        board.MakeMove(move);
         int eval = AI::EvaluateMove(board, -10009, beta, AI::searchDepth, true);
         if (eval < beta)
         {
@@ -141,12 +131,6 @@ void AIPlayer::MakeMove(Board board, bool* doneFlag, Move* result)
         board.UndoMove();
     }
 
-    Move chosenMove = *best;
-
-    for (Move* move : possibleMoves)
-    {
-        delete move;
-    }
-    *result = chosenMove;
+    *result = best;
     *doneFlag = true;
 }
