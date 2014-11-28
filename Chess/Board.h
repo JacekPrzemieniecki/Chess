@@ -37,7 +37,7 @@ public:
 	bool wkcastle = true;
 	bool wqcastle = true;
 private:
-	std::list<Move> moveHistory;
+	std::vector<Move> moveHistory;
 
 	void Place(PieceType piece, int x, int y);
 	void Place(PieceType piece, int position);

@@ -236,7 +236,7 @@ void Board::Place(const PieceType type, int position)
 
 Move& Board::GetLastMove()
 {
-    return moveHistory.front();
+    return moveHistory.back();
 }
 
 void Board::MakeMove(Move move)
@@ -294,14 +294,14 @@ void Board::MakeMove(Move move)
 
     Place(EMPTY, move.from);
 
-    moveHistory.push_front(move);
+    moveHistory.push_back(move);
     whiteToMove = !whiteToMove;
     turn++;
 }
 
 void Board::UndoMove()
 {
-    Move lastMove = moveHistory.front();
+    Move lastMove = moveHistory.back();
     whiteToMove = !whiteToMove;
     turn--;
     kingDead = false;
@@ -340,10 +340,10 @@ void Board::UndoMove()
     }
 
     Place(lastMove.capturedPiece, lastMove.to);
-    moveHistory.pop_front();
+    moveHistory.pop_back();
     if (moveHistory.size() != 0)
     {
-        Move previousMove = moveHistory.front();
+        Move previousMove = moveHistory.back();
         enPassant = previousMove.isPawnDoublePush ? (previousMove.from + previousMove.to) / 2 : -1;
     }
 }

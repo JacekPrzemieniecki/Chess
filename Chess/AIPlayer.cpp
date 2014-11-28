@@ -44,7 +44,7 @@ namespace AI
         }
 
         vector<Move> possibleMoves;
-        possibleMoves.reserve(100);
+        possibleMoves.reserve(218);
         GenerateAll(board, possibleMoves);
         value += possibleMoves.size();
 
