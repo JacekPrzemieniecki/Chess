@@ -26,7 +26,7 @@ game()
 	screenW = size.x;
 	screenH = size.y;
 	tileSize = (min(size.x, size.y) - 2 * border) / 8;
-	LoadTextures();
+    spriteSet.Init();
 }
 
 void BoardInterface::Undo()
@@ -106,57 +106,7 @@ void BoardInterface::OnClick(int x, int y)
 
 void BoardInterface::Draw()
 {
-	window.draw(boardTexture);
-
-	//Debug
-
-	//vector<Move*> moves;
-	//GenerateAll(game.board, moves);
-	//for (vector<Move*>::iterator iter = moves.begin(); iter != moves.end(); iter++)
-	//{
-	//	DrawGizmo((*iter)->to);
-	//}
-	//for (vector<Move*>::iterator it = moves.begin(); it != moves.end(); it++)
-	//{
-	//	delete *it;
-	//}
-
-	//vector<int> whites = game.GetWhitePieces();
-
-	//for (vector<int>::iterator it = whites.begin(); it != whites.end(); it++)
-	//{
-	//	if (game.GetPiece(*it) != EMPTY )
-	//	{
-	//		vector<Move*> moves;
-	//		Generate(*it, *(game.board), moves);
-	//		for (vector<Move*>::iterator iter = moves.begin(); iter != moves.end(); iter++)
-	//		{
-	//			DrawGizmo((*iter)->to);
-	//		}
-	//	}
-	//}
-
-	//for (int i = 0; i < 128; i++)
-	//{
-	//	if (i & 0x88) continue;
-	//	if (IsAttacked(*game.board, i, false))
-	//		DrawGizmo(i);
-	//}
-
-	//int x, y;
-	//BoardToScreen(67, x, y);
-	//bknight.setPosition(x, y);
-	//window.draw(bknight);
-	/*
-		vector<int> bishopTab = { -15, 15, -17, 17 };
-
-		for (vector<int>::iterator it = bishopTab.begin(); it != bishopTab.end(); it++)
-		{
-		DrawGizmo(67 + *it);
-		}
-		*/
-	//Debug
-
+    window.draw(spriteSet.boardTexture);
 
 	if (game.GetLastMove().from != -1)
 	{
@@ -200,40 +150,40 @@ void BoardInterface::DrawPiece(PieceType type, int boardPosition)
 	switch (type)
 	{
 	case B_BISHOP:
-		sprite = bbishop;
+		sprite = spriteSet.bbishop;
 		break;
 	case B_KING:
-		sprite = bking;
+        sprite = spriteSet.bking;
 		break;
 	case B_KNIGHT:
-		sprite = bknight;
+        sprite = spriteSet.bknight;
 		break;
 	case B_PAWN:
-		sprite = bpawn;
+        sprite = spriteSet.bpawn;
 		break;
 	case B_QUEEN:
-		sprite = bqueen;
+        sprite = spriteSet.bqueen;
 		break;
 	case B_ROCK:
-		sprite = brock;
+        sprite = spriteSet.brock;
 		break;
 	case W_BISHOP:
-		sprite = wbishop;
+        sprite = spriteSet.wbishop;
 		break;
 	case W_KING:
-		sprite = wking;
+        sprite = spriteSet.wking;
 		break;
 	case W_KNIGHT:
-		sprite = wknight;
+        sprite = spriteSet.wknight;
 		break;
 	case W_PAWN:
-		sprite = wpawn;
+        sprite = spriteSet.wpawn;
 		break;
 	case W_QUEEN:
-		sprite = wqueen;
+        sprite = spriteSet.wqueen;
 		break;
 	case W_ROCK:
-		sprite = wrock;
+        sprite = spriteSet.wrock;
 		break;
 	default:
 		break;
@@ -250,15 +200,15 @@ void BoardInterface::DrawMoveSuggestion()
 	int mouseY = position.y - (position.y - border) % tileSize;
 	if (border <= position.x && position.x < screenW - border && border <= position.y && position.y < screenH - border)
 	{
-		highlightMoveSuggestion.setPosition((float)mouseX, (float)mouseY);
-		window.draw(highlightMoveSuggestion);
+        spriteSet.highlightMoveSuggestion.setPosition((float)mouseX, (float)mouseY);
+        window.draw(spriteSet.highlightMoveSuggestion);
 	}
 
 	int selectedX, selectedY;
 	BoardToScreen(selectedPosition, selectedX, selectedY);
-	highlightPiece.setPosition((float)selectedX, (float)selectedY);
+    spriteSet.highlightPiece.setPosition((float)selectedX, (float)selectedY);
 
-	window.draw(highlightPiece);
+    window.draw(spriteSet.highlightPiece);
 }
 
 void BoardInterface::DrawLastMove(Move& move)
@@ -266,10 +216,10 @@ void BoardInterface::DrawLastMove(Move& move)
 	int fromX, fromY, toX, toY;
 	BoardToScreen(move.from, fromX, fromY);
 	BoardToScreen(move.to, toX, toY);
-	highlightLastFrom.setPosition((float)fromX, (float)fromY);
-	highlightLastTo.setPosition((float)toX, (float)toY);
-	window.draw(highlightLastFrom);
-	window.draw(highlightLastTo);
+    spriteSet.highlightLastFrom.setPosition((float)fromX, (float)fromY);
+    spriteSet.highlightLastTo.setPosition((float)toX, (float)toY);
+    window.draw(spriteSet.highlightLastFrom);
+    window.draw(spriteSet.highlightLastTo);
 }
 
 void BoardInterface::BoardToScreen(int boardPosition, int& x, int& y)
@@ -281,50 +231,4 @@ void BoardInterface::BoardToScreen(int boardPosition, int& x, int& y)
 int BoardInterface::ScreenToBoard(int x, int y)
 {
 	return  (y - border) / tileSize * 16 + (x - border) / tileSize;
-}
-
-void BoardInterface::LoadTextures()
-{
-	if (!(
-		tx_boardTexture.loadFromFile("img/board.png") &&
-		tx_highlightlast.loadFromFile("img/highlightlast.png") &&
-		tx_highlight.loadFromFile("img/highlight.png") &&
-
-		tx_wking.loadFromFile("img/wking.png") &&
-		tx_wqueen.loadFromFile("img/wqueen.png") &&
-		tx_wbishop.loadFromFile("img/wbishop.png") &&
-		tx_wknight.loadFromFile("img/wknight.png") &&
-		tx_wrock.loadFromFile("img/wrock.png") &&
-		tx_wpawn.loadFromFile("img/wpawn.png") &&
-
-		tx_bking.loadFromFile("img/bking.png") &&
-		tx_bqueen.loadFromFile("img/bqueen.png") &&
-		tx_bbishop.loadFromFile("img/bbishop.png") &&
-		tx_bknight.loadFromFile("img/bknight.png") &&
-		tx_brock.loadFromFile("img/brock.png") &&
-		tx_bpawn.loadFromFile("img/bpawn.png")
-		))
-	{
-		fprintf(stderr, "Failed to load images");
-	}
-
-	boardTexture.setTexture(tx_boardTexture);
-	highlightLastFrom.setTexture(tx_highlightlast);
-	highlightLastTo.setTexture(tx_highlightlast);
-	highlightPiece.setTexture(tx_highlight);
-	highlightMoveSuggestion.setTexture(tx_highlight);
-
-	wking.setTexture(tx_wking);
-	wqueen.setTexture(tx_wqueen);
-	wbishop.setTexture(tx_wbishop);
-	wknight.setTexture(tx_wknight);
-	wrock.setTexture(tx_wrock);
-	wpawn.setTexture(tx_wpawn);
-
-	bking.setTexture(tx_bking);
-	bqueen.setTexture(tx_bqueen);
-	bbishop.setTexture(tx_bbishop);
-	bknight.setTexture(tx_bknight);
-	brock.setTexture(tx_brock);
-	bpawn.setTexture(tx_bpawn);
 }

@@ -82,6 +82,7 @@
     <ClCompile Include="MoveGenerator.cpp" />
     <ClCompile Include="MoveValidator.cpp" />
     <ClCompile Include="PromoteWindow.cpp" />
+    <ClCompile Include="SpriteSet.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +96,7 @@
     <ClInclude Include="Piece.h" />
     <ClInclude Include="PieceMoves.h" />
     <ClInclude Include="PromoteWindow.h" />
+    <ClInclude Include="SpriteSet.h" />
     <ClInclude Include="Test.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
